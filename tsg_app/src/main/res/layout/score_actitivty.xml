@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:keepScreenOn="true"
+    android:orientation="vertical">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:src="@drawable/back"
+        app:useCompatPadding="true" />
+
+    <TextView
+        android:id="@+id/tvScoreBoard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/Scoreboard"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvTimerResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/tvScoreBoard"
+        android:text="@string/TimeZero"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/llWhereAreWe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvScoreBoard"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvWhereAreWe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/WhereAreWe"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spWhere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llWhoIsSpy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvScoreBoard"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvWhoIsSpy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/WhoIsSpy"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spWho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvResultWho"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvScoreBoard"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/ResultWait"
+        android:textColor="@color/colorResult"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvResultWhere"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvResultWho"
+        android:layout_marginStart="10dp"
+        android:text="@string/ResultWait"
+        android:textColor="@color/colorResult"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvRanking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvResultWhere"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/Ranking"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRanking"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:shrinkColumns="*">
+
+        <TableRow android:background="@color/colorPrimary">
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorButton"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/Pos"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorButton"
+                android:padding="3dp"
+                android:text="@string/Name"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorButton"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/Answer"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorButton"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/ThisRound"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorButton"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/Total"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr1"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv1_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv1_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv1_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv1_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv1_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr2"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv2_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv2_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv2_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv2_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv2_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr3"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv3_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv3_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv3_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv3_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv3_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr4"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv4_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv4_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv4_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv4_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv4_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr5"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv5_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv5_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv5_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv5_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv5_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr6"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv6_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv6_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv6_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv6_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv6_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr7"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv7_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv7_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv7_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv7_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv7_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr8"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv8_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv8_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv8_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv8_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv8_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr9"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:id="@+id/tv9_1"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv9_2"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv9_3"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv9_4"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv9_5"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp" />
+        </TableRow>
+
+    </TableLayout>
+
+</RelativeLayout>

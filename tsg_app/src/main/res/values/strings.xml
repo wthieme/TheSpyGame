@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">The spy game</string>
+    <string name="Game">Game:</string>
+    <string name="Nickname">Name:</string>
+    <string name="Player"></string>
+    <string name="NoSpy">You are NOT the spy</string>
+    <string name="Spy">You are the spy!</string>
+    <string name="Location" formatted="false">You are %s %s</string>
+    <string name="Players">Players:</string>
+    <string name="Status">Status %s</string>
+    <string name="NoInternet">No internet connetion</string>
+    <string name="TimeZero">00:00</string>
+    <string name="StatusUnknown">Status Unknown</string>
+    <string name="AvailableGames">Available games</string>
+    <string name="NoGamesAvailable">No games available</string>
+    <string name="NameMustNotBeEmpty">Name for the game must not be empty</string>
+    <string name="NicknameMustNotBeEmpty">Nickname for the player must not be empty</string>
+    <string name="CheckingVersion">Checking app version...</string>
+    <string name="UpdateNeeded">Your app is outdated. Go to the play store and install the latest version of \'The Spy Game\'</string>
+    <string name="FromTo" formatted="false">From %s to %s</string>
+    <string name="Chat">Chat</string>
+    <string name="TypeChatMessage">Message:</string>
+    <string name="MessageTo">Message to:</string>
+    <string name="NoOneToChat">There is no one to chat with</string>
+    <string name="Locations">Locations</string>
+    <string name="Rules">Rules</string>
+    <string name="Settings">Settings</string>
+    <string name="GameInfo" formatted="false">%s (%s), %s, %d players</string>
+    <string name="TimeFormat" formatted="false">%02d:%02d</string>
+    <string name="OK">OK</string>
+    <string name="RulesTitle">The rules of the game</string>
+    <string name="RulesTxt"><b><i>The Spy Game</i></b> is a fun game for 3 to 9 players.
+        \n\nOne of the players is the <b>spy</b> and the others have to guess who that is.
+        \nThe <b>spy</b> on the other hand has to guess where the other players are situated.
+        \nThis is done by asking questions to each other. Player 1 asks a question to player 2 and when player 2 has answered, it\'s his turn to ask a question.
+        \nA player is not allowed to ask a question to the player that asked the question in the previous turn.
+        \nCreate a game with the \'<b>plus</b>\' button, then when all players are joined (\'<b>join</b>\' button) press the \'<b>play</b>\' button.
+        \nTo <b>chat</b> to another player press the button with the player name in it or use the \'<b>chat</b>\' button.
+        \n\nThere is a <b>time limit</b> for each round. After the game has been started a countdown counter shows the playing time left.
+        \n\nWhen the counter reaches <b>00:00</b> it\'s time to speak out.
+</string>
+    <string name="LocationsTitle">Possible locations</string>
+    <string name="CountryUnknown">Country unknown</string>
+    <string name="WhereAreWe">Where are we?</string>
+    <string name="WhoIsSpy">Who is the spy?</string>
+    <string name="Scoreboard">Scoreboard</string>
+    <string name="Pos">Pos</string>
+    <string name="Name">Name</string>
+    <string name="Role">Role</string>
+    <string name="ThisRound">+</string>
+    <string name="Total">Total</string>
+    <string name="Answer">Answer</string>
+    <string name="ResultWait" formatted="false">Waiting for answers of %s players</string>
+    <string name="SpyResult" formatted="false">The spy is: %s</string>
+    <string name="LocationResult" formatted="false">The location is: %s</string>
+    <string name="Ranking">Ranking</string>
+    <string name="appMenu">App menu</string>
+    <string name="media_route_menu_title">Cast to</string>
+    <string name="cast_app_id">7051341A</string>
+    <string name="cast_namespace">urn:x-cast:nl.whitedove.thespygame</string>
+    <string name="TheSpy">The Spy</string>
+
+</resources>

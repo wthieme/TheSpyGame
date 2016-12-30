@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:clipChildren="false"
+    android:orientation="vertical"
+    android:paddingTop="5dp">
+
+    <LinearLayout
+        android:id="@+id/llGame"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:paddingTop="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:width="60dp"
+            android:gravity="left"
+            android:text="@string/Game"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etGame"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:width="60dp"
+            android:background="@drawable/edit_text"
+            android:inputType="text"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textColor="@color/colorTekst"
+            android:textIsSelectable="false"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/ivGameList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/AvailableGames"
+            android:padding="1dp"
+            android:src="@drawable/down" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCreateGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:src="@drawable/plus"
+            app:useCompatPadding="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llGame"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="0dp"
+        android:clipChildren="false"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvGameStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:gravity="start"
+            android:text="@string/StatusUnknown"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/TimeZero"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llNick"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/llStatus"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:width="60dp"
+            android:gravity="left"
+            android:text="@string/Nickname"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etNickname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:width="60dp"
+            android:background="@drawable/edit_text"
+            android:inputType="text"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textColor="@color/colorTekst"
+            android:textSize="14sp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabJoinGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:src="@drawable/join"
+            app:useCompatPadding="true" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabLeaveGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:src="@drawable/leave"
+            app:useCompatPadding="true" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llPlayers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llNick"
+        android:clipChildren="false"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:width="100dp"
+            android:gravity="left"
+            android:text="@string/Players"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llButtonRow1"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/llPlayers"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnPlayer1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnPlayer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnPlayer3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llButtonRow2"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/llButtonRow1"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnPlayer4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnPlayer5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnPlayer6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llButtonRow3"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/llButtonRow2"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnPlayer7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnPlayer8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/btnPlayer9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:background="@color/colorButton"
+            android:padding="1dp"
+            android:text="@string/Player"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llButtonRow3"
+        android:layout_marginTop="0dp"
+        android:clipChildren="false"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabStartGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:src="@drawable/start"
+            android:visibility="gone"
+            app:useCompatPadding="true" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabFinishGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:src="@drawable/finish"
+            android:visibility="gone"
+            app:useCompatPadding="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:clipChildren="false"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSpy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/Spy"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/Location"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llStart"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorBackground"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/lvMessages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/chat"
+        android:visibility="visible"
+        app:useCompatPadding="true" />
+
+</RelativeLayout>

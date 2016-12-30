@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1081532839437",
+    "firebase_url": "https://thespygame-142522.firebaseio.com",
+    "project_id": "thespygame-142522",
+    "storage_bucket": "thespygame-142522.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081532839437:android:bb79ee65b7f4abc4",
+        "android_client_info": {
+          "package_name": "nl.whitedove.thespygame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081532839437-8ojfq14ue7nsnt4hkbnfvbjrev6bb5pt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHxfcheuhYSOV4S0oTo3U7Z-YzFzQVVPA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

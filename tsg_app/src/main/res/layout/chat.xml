@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llChat"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/MessageTo"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp" />
+
+        <Spinner
+            android:id="@+id/spPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTekst"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/TypeChatMessage"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/etChatMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:maxLength="140"
+        android:maxLines="3"
+        android:minLines="3"
+        android:textColor="@color/colorTekst"
+        android:textIsSelectable="false">
+
+    </EditText>
+
+</LinearLayout>
