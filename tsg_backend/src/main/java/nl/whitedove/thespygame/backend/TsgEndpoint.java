@@ -288,7 +288,7 @@ public class TsgEndpoint {
 
         game = DetermineSpyAndPlayer(game);
 
-        TsgMessage mess = new TsgMessage("A new game has been started, have fun!", "");
+        TsgMessage mess = new TsgMessage("A new game has been started. Have fun!", "");
         AddMessage(game, mess);
         SendMessagesToClients(game.getPlayers(), MAIN);
 

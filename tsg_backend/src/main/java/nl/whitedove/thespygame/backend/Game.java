@@ -14,7 +14,7 @@ public class Game {
         FinishTime = finishTime;
     }
 
-    public enum GameStatus {UnKnown, Created, Running, WaitingForScore, Finished}
+    public enum GameStatus {Unknown, Created, Running, WaitingForScore, Finished}
 
     private String Name;
     private ArrayList<Player> Players;
@@ -30,7 +30,7 @@ public class Game {
 
     public Game(String name) {
         this.setPlayers(new ArrayList<Player>());
-        this.GameStatus = this.GameStatus.UnKnown;
+        this.GameStatus = this.GameStatus.Unknown;
         this.Name = name;
         this.LastUsed = DateTime.now();
         this.Result = "OK";
@@ -93,7 +93,6 @@ public class Game {
     public void setGameStatus(GameStatus gameStatus) {
         GameStatus = gameStatus;
     }
-
 
     public ArrayList<Player> getWaitingPlayers() {
         return WaitingPlayers;

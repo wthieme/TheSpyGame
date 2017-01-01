@@ -8,8 +8,8 @@ android {
         applicationId "nl.whitedove.thespygame"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 13
-        versionName "1.2.0"
+        versionCode 14
+        versionName "1.2.1"
     }
     buildTypes {
         release {

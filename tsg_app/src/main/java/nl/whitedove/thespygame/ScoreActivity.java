@@ -292,15 +292,15 @@ public class ScoreActivity extends AppCompatActivity {
             CastTimeColor(col);
         }
 
-        if (totalSeconds < 0) {
-            ProcessResults();
-            return;
-        }
         int minutes = Math.abs(period.getMinutes());
         int seconds = Math.abs(period.getSeconds());
         String timeVal = String.format(getString(R.string.TimeFormat), minutes, seconds);
         CastTimeValue(timeVal);
         tvTimerResult.setText(timeVal);
+
+        if (totalSeconds <= 0) {
+            ProcessResults();
+        }
     }
 
     private void StopTimer() {
@@ -572,15 +572,12 @@ public class ScoreActivity extends AppCompatActivity {
         TextView tvTimerResult = (TextView) findViewById(R.id.tvTimerResult);
 
         if (game.getGameStatus().equalsIgnoreCase("Finished")) {
+            StopTimer();
             CastTimeValue(getString(R.string.TimeZero));
             CastTimeColor(Color.RED);
             tvTimerResult.setText(getString(R.string.TimeZero));
             tvTimerResult.setTextColor(Color.RED);
-
-            StopTimer();
-
             tvResultWho.setText(String.format(context.getString(R.string.SpyResult), theSpy == null ? "Unknown" : theSpy.getName()));
-
             tvResultWhere.setVisibility(View.VISIBLE);
             tvResultWhere.setText(String.format(context.getString(R.string.LocationResult), game.getLocation()));
         } else {

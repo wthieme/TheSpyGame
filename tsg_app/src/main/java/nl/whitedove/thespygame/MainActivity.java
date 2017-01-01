@@ -308,15 +308,15 @@ public class MainActivity extends AppCompatActivity {
             CastTimeColor(col);
         }
 
-        if (totalSeconds < 0) {
-            if (Helper.mGame.getGameStatus().equalsIgnoreCase("Running")) FinishGame();
-            return;
-        }
         int minutes = Math.abs(period.getMinutes());
         int seconds = Math.abs(period.getSeconds());
         String timeVal = String.format(getString(R.string.TimeFormat), minutes, seconds);
         CastTimeValue(timeVal);
         tvTimer.setText(timeVal);
+
+        if (totalSeconds <= 0) {
+            if (Helper.mGame.getGameStatus().equalsIgnoreCase("Running")) FinishGame();
+        }
     }
 
     private void StopTimer() {
@@ -506,7 +506,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void ScoreActivity() {
@@ -1088,7 +1087,7 @@ public class MainActivity extends AppCompatActivity {
 
         tvGameStatus.setText(String.format(getString(R.string.Status), gameStatus));
         switch (gameStatus) {
-            case "UnKnown": {
+            case "Unknown": {
                 fabStartGame.setVisibility(View.GONE);
                 fabFinishGame.setVisibility(View.GONE);
                 tvSpy.setVisibility(View.GONE);
@@ -1129,8 +1128,6 @@ public class MainActivity extends AppCompatActivity {
             }
             case "WaitingForScore": {
                 StopTimer();
-                CastTimeValue(getString(R.string.TimeZero));
-                CastTimeColor(Color.RED);
                 tvTimer.setText(getString(R.string.TimeZero));
                 tvTimer.setTextColor(Color.RED);
                 fabStartGame.setVisibility(View.GONE);
@@ -1150,7 +1147,13 @@ public class MainActivity extends AppCompatActivity {
                     tvSpy.setText(getString(R.string.NoSpy));
                 }
 
-                if (Helper.ScoreTime.plusSeconds(3).isBeforeNow()) ScoreActivity();
+                if (Helper.ScoreTime.plusSeconds(1).isBeforeNow()) {
+                    ScoreActivity();
+                }
+                else {
+                    CastTimeValue(getString(R.string.TimeZero));
+                    CastTimeColor(Color.RED);
+                }
                 Helper.ScoreTime = DateTime.now();
                 break;
             }
