@@ -12,9 +12,9 @@
         android:id="@+id/llGame"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_marginTop="5dp"
         android:clipChildren="false"
         android:gravity="center"
-        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:paddingTop="0dp">
 
@@ -22,8 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:width="60dp"
-            android:gravity="left"
+            android:gravity="start"
+            android:labelFor="@+id/etGame"
             android:text="@string/Game"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
@@ -32,6 +32,7 @@
         <EditText
             android:id="@+id/etGame"
             android:layout_width="0dp"
+            android:layout_marginStart="3dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:width="60dp"
@@ -110,8 +111,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:width="60dp"
-            android:gravity="left"
+            android:gravity="start"
+            android:labelFor="@+id/etNickname"
             android:text="@string/Nickname"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
@@ -123,6 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:width="60dp"
+            android:layout_marginStart="3dp"
             android:background="@drawable/edit_text"
             android:inputType="text"
             android:maxLength="10"
@@ -163,7 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:width="100dp"
-            android:gravity="left"
+            android:gravity="start"
             android:text="@string/Players"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp"
@@ -182,6 +184,7 @@
 
         <Button
             android:id="@+id/btnPlayer1"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -199,6 +202,7 @@
 
         <Button
             android:id="@+id/btnPlayer2"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -216,6 +220,7 @@
 
         <Button
             android:id="@+id/btnPlayer3"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -244,6 +249,7 @@
 
         <Button
             android:id="@+id/btnPlayer4"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -261,6 +267,7 @@
 
         <Button
             android:id="@+id/btnPlayer5"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -278,6 +285,7 @@
 
         <Button
             android:id="@+id/btnPlayer6"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -306,6 +314,7 @@
 
         <Button
             android:id="@+id/btnPlayer7"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -323,6 +332,7 @@
 
         <Button
             android:id="@+id/btnPlayer8"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -340,6 +350,7 @@
 
         <Button
             android:id="@+id/btnPlayer9"
+            style="android:attr/buttonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"

@@ -10,24 +10,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:gravity="center"
         android:text="@string/RulesTitle"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center" />
+        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvRulesText"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
+        android:layout_marginBottom="40dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvRulesTitle"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:text="@string/RulesTxt"
-        android:textColor="@color/colorTekst"
-        android:textSize="14sp" />
+        android:fillViewport="true"
+        android:scrollbars="vertical">
 
-   <Button
+        <TextView
+            android:id="@+id/tvRulesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/RulesTxt"
+            android:textColor="@color/colorTekst"
+            android:textSize="14sp" />
+    </ScrollView>
+
+    <Button
         android:id="@+id/btOk"
         android:layout_width="100dp"
         android:layout_height="30dp"

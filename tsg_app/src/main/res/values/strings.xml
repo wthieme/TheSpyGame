@@ -30,14 +30,17 @@
     <string name="OK">OK</string>
     <string name="RulesTitle">The rules of the game</string>
     <string name="RulesTxt"><b><i>The Spy Game</i></b> is a fun game for 3 to 9 players.
-        \n\nOne of the players is the <b>spy</b> and the others have to guess who that is.
+        \n\nIf you have a Chromecast, the first thing you should do is push the cast button. The status of the game will be displayed on your TV!
+        \n\nIn \'The Spy Game\', one of the players is the <b>spy</b> and the others have to guess who that is.
         \nThe <b>spy</b> on the other hand has to guess where the other players are situated.
-        \nThis is done by asking questions to each other. Player 1 asks a question to player 2 and when player 2 has answered, it\'s his turn to ask a question.
+        \n\nThis is done by asking questions to each other. Player 1 asks a question to player 2 and when player 2 has answered, it\'s his turn to ask a question.
         \nA player is not allowed to ask a question to the player that asked the question in the previous turn.
-        \nCreate a game with the \'<b>plus</b>\' button, then when all players are joined (\'<b>join</b>\' button) press the \'<b>play</b>\' button.
-        \nTo <b>chat</b> to another player press the button with the player name in it or use the \'<b>chat</b>\' button.
+        \n\nTo create a game, use the \'<b>plus</b>\' button, then when all players are joined (\'<b>join</b>\' button) press the \'<b>play</b>\' button to start.
+        \n\nAny player who thinks he knows the answer can finish the game with the \'<b>finish</b>\' button.
+        \n\nTo <b>chat</b> to another player press the button with the player name in it or use the \'<b>chat</b>\' button.
         \n\nThere is a <b>time limit</b> for each round. After the game has been started a countdown counter shows the playing time left.
-        \n\nWhen the counter reaches <b>00:00</b> it\'s time to speak out.
+        \n\nWhen the counter reaches <b>00:00</b> or someone has ended the game it\'s time to speak out.
+        \nYou have 30 seconds to answer. Each correct answers earns you 1 point.
 </string>
     <string name="LocationsTitle">Possible locations</string>
     <string name="CountryUnknown">Country unknown</string>
