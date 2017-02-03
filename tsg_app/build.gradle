@@ -8,8 +8,8 @@ android {
         applicationId "nl.whitedove.thespygame"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 14
-        versionName "1.2.1"
+        versionCode 15
+        versionName "1.2.2"
     }
     buildTypes {
         release {
@@ -22,9 +22,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'joda-time:joda-time:2.9.6'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'joda-time:joda-time:2.9.7'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.google.android.gms:play-services-cast-framework:10.0.1'
     compile project(path: ':tsg_backend', configuration: 'android-endpoints')

@@ -1,5 +1,6 @@
 package nl.whitedove.thespygame;
 
+import android.*;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -17,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     private CastContext mCastContext;
     private CastSession mCastSession;
     private static TsgChannel mChannel;
+    static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     SessionManagerListener<CastSession> mSessionManagerListener = new SessionManagerListener<CastSession>() {
 
@@ -1149,8 +1152,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (Helper.ScoreTime.plusSeconds(1).isBeforeNow()) {
                     ScoreActivity();
-                }
-                else {
+                } else {
                     CastTimeValue(getString(R.string.TimeZero));
                     CastTimeColor(Color.RED);
                 }
@@ -1317,16 +1319,50 @@ public class MainActivity extends AppCompatActivity {
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
             return;
         }
 
-        // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Helper.ONE_MINUTE, Helper.ONE_KM, locationListener);
+        Location gpsLastLocation = null;
+        Location netLastLocation = null;
+        Location pasLastLocation = null;
 
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Helper.ONE_MINUTE, Helper.ONE_KM, locationListener);
+            gpsLastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
 
-        Location lastLocation = locationManager.getLastKnownLocation(locationProvider);
-        makeUseOfNewLocation(lastLocation);
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Helper.ONE_MINUTE, Helper.ONE_KM, locationListener);
+            netLastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+
+        if (locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, Helper.ONE_MINUTE, Helper.ONE_KM, locationListener);
+            pasLastLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        }
+
+        if (gpsLastLocation != null) makeUseOfNewLocation(gpsLastLocation);
+        else if (netLastLocation != null) makeUseOfNewLocation(netLastLocation);
+        else makeUseOfNewLocation(pasLastLocation);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    InitLocation();
+                } else {
+                    Helper.ShowMessage(this, "Without location permission the country will be unknown in the game list", true);
+                }
+            }
+        }
     }
 
     private void makeUseOfNewLocation(Location location) {
