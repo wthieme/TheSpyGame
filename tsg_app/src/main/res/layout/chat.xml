@@ -14,6 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="@string/MessageTo"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="14sp" />
@@ -21,6 +22,7 @@
         <Spinner
             android:id="@+id/spPlayer"
             android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTekst"
             android:textSize="14sp" />
