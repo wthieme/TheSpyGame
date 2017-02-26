@@ -1046,7 +1046,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void CastToTv() {
-        if (mCastContext == null || mCastSession == null) return;
+        if (mCastContext == null || mCastSession == null || Helper.mGame == null) return;
         Context context = getApplicationContext();
         sendMessage(Helper.GameMessage(Helper.mGame, context));
     }
