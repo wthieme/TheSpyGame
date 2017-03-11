@@ -421,7 +421,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -430,7 +431,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -439,7 +441,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -448,7 +451,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -457,7 +461,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -466,7 +471,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -475,7 +481,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -484,7 +491,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 
@@ -493,7 +501,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Button btn = (Button) view;
-                Chat(btn.getTag().toString());
+                String name = btn.getTag() == null ? "" : btn.getTag().toString();
+                Chat(name);
             }
         });
 

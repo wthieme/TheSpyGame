@@ -1,13 +1,11 @@
 package nl.whitedove.thespygame;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
