@@ -19,4 +19,9 @@
         android:orderInCategory="200"
         android:title="@string/Rules"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/itPrivacy"
+        android:orderInCategory="300"
+        android:title="@string/Privacy"
+        app:showAsAction="never" />
 </menu>
