@@ -5,7 +5,10 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -34,10 +37,13 @@ import nl.whitedove.thespygame.backend.tsgApi.model.TsgMessage;
 class Helper {
 
     private static final String ApiUrl = "https://5-dot-thespygame-142522.appspot.com/_ah/api/";
+    static final String PrivacuUrl = "https://wthieme.github.io/privacytsg.html";
 
     static TsgApi myApiService = new TsgApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
             .setRootUrl(Helper.ApiUrl)
             .build();
+
+
     private static final boolean DEBUG = true;
     static final String OK = "OK";
     static DateTimeFormatter tFormat = DateTimeFormat.forPattern("HH:mm:ss").withLocale(Locale.getDefault());
@@ -294,5 +300,13 @@ class Helper {
         } catch (JSONException ignored) {
         }
         return gjson.toString();
+    }
+
+    @SuppressWarnings("deprecation")
+    static void SetHtmlText(TextView view, String htmlTxt) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            view.setText(Html.fromHtml(htmlTxt, Html.FROM_HTML_MODE_LEGACY));
+        else
+            view.setText(Html.fromHtml(htmlTxt));
     }
 }

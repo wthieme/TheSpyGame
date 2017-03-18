@@ -62,5 +62,9 @@
     <string name="cast_app_id">7051341A</string>
     <string name="cast_namespace">urn:x-cast:nl.whitedove.thespygame</string>
     <string name="TheSpy">The Spy</string>
+    <string name="PrivacyTitle">Privacy policy</string>
+    <string name="PrivacyTxt">Loading privacy text ...</string>
+    <string name="Privacy">Privacy policy</string>
+    <string name="ErrorLoadingPrivacy">Error loading privacy policy</string>
 
 </resources>

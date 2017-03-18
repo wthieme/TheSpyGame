@@ -201,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
             ShowRulesDialog();
             return true;
         }
+
+        if (id == R.id.itPrivacy) {
+            ShowPrivacyDialog();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -1366,6 +1371,11 @@ public class MainActivity extends AppCompatActivity {
     private void ShowRulesDialog() {
         RulesDialog rd = new RulesDialog(this);
         ShowBiggerDialog(rd);
+    }
+
+    private void ShowPrivacyDialog() {
+        PrivacyDialog pd = new PrivacyDialog(this);
+        ShowBiggerDialog(pd);
     }
 
     private void ShowLocationssDialog() {
