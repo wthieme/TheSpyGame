@@ -44,7 +44,7 @@ class Helper {
             .build();
 
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     static final String OK = "OK";
     static DateTimeFormatter tFormat = DateTimeFormat.forPattern("HH:mm:ss").withLocale(Locale.getDefault());
     static Location mCurrentBestLocation;

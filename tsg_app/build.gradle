@@ -8,8 +8,8 @@ android {
         applicationId "nl.whitedove.thespygame"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 21
-        versionName "1.2.8"
+        versionCode 22
+        versionName "1.2.9"
     }
     buildTypes {
         release {
@@ -22,14 +22,17 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'joda-time:joda-time:2.9.7'
-    compile 'com.android.support:design:25.3.0'
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support:mediarouter-v7:25.3.0'
-    compile 'com.google.firebase:firebase-messaging:10.2.0'
-    compile 'com.google.android.gms:play-services-cast-framework:10.2.0'
+    compile 'joda-time:joda-time:2.9.9'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:mediarouter-v7:25.3.1'
+    compile 'com.google.firebase:firebase-messaging:10.2.1'
+    compile 'com.google.android.gms:play-services-cast-framework:10.2.1'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile ('com.google.api-client:google-api-client-android:1.22.0')
+            {
+                exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+            }
     compile project(path: ':tsg_backend', configuration: 'android-endpoints')
 }
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.android.application'
