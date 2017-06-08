@@ -180,6 +180,7 @@ class Helper {
     }
 
     static void SetGame(Game game) {
+        if (game==null) return;
         mGame = game;
         mOffset = game.getLastUsed().getMillis() - DateTime.now().getMillis();
         int nrOfPlayers = game.getPlayers() == null ? 0 : game.getPlayers().size();
