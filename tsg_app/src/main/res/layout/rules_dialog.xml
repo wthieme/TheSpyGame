@@ -32,7 +32,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/RulesTxt"
-            android:textColor="@color/colorTekst"
+            android:textColor="@color/colorText"
             android:textSize="14sp" />
     </ScrollView>
 

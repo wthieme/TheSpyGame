@@ -35,11 +35,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan">
         </activity>
-        <activity
-            android:name=".ScoreActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-        </activity>
+
         <service
             android:name=".MyFcmListenerService"
             android:exported="false">

@@ -35,8 +35,8 @@
         \nThe <b>spy</b> on the other hand has to guess where the other players are situated.
         \n\nThis is done by asking questions to each other. Player 1 asks a question to player 2 and when player 2 has answered, it\'s his turn to ask a question.
         \nA player is not allowed to ask a question to the player that asked the question in the previous turn.
-        \n\nTo create a game, use the \'<b>plus</b>\' button, then when all players are joined (\'<b>join</b>\' button) press the \'<b>play</b>\' button to start.
-        \n\nAny player who thinks he knows the answer can finish the game with the \'<b>finish</b>\' button.
+        \n\nTo create a game, use the \'<b>plus</b>\' button, then when all players are joined (\'<b>join</b>\' button) and checked the \'<b>ready checkbox</b>\' the game starts.
+        \n\nAny player who thinks he knows the answer can check his \'<b>ready checkbox</b>\'. The game ends when the timer reaches 00:00 or when all players checked their \'<b>ready checkbox</b>\'.
         \n\nTo <b>chat</b> to another player press the button with the player name in it or use the \'<b>chat</b>\' button.
         \n\nThere is a <b>time limit</b> for each round. After the game has been started a countdown counter shows the playing time left.
         \n\nWhen the counter reaches <b>00:00</b> or someone has ended the game it\'s time to speak out.
@@ -66,5 +66,7 @@
     <string name="PrivacyTxt">Loading privacy text ...</string>
     <string name="Privacy">Privacy policy</string>
     <string name="ErrorLoadingPrivacy">Error loading privacy policy</string>
-
+    <string name="ReadyToStart" formatted="false">Ready to start (%s/%s ready)</string>
+    <string name="ReadyToStartNew" formatted="false">Ready for a new game (%s/%s ready)</string>
+    <string name="ReadyToFinish" formatted="false">Ready to finish (%s/%s ready)</string>
 </resources>

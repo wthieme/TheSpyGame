@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text=""
-            android:textColor="@color/colorTekst"
+            android:textColor="@color/colorText"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text=""
-            android:textColor="@color/colorTekst"
+            android:textColor="@color/colorText"
             android:textSize="12sp" />
 
     </RelativeLayout>
@@ -39,7 +39,7 @@
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
         android:text=""
-        android:textColor="@color/colorTekst"
+        android:textColor="@color/colorText"
         android:textSize="14sp"
         android:textStyle="italic" />
 

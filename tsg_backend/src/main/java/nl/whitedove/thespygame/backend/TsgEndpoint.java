@@ -38,7 +38,6 @@ public class TsgEndpoint {
     private static final int MAX_PLAYERS = 9;
     private static final int MAX_CHATS = 50;
     private static final String MAIN = "MAIN";
-    private static final String SCORE = "SCORE";
 
     private void SetGameHealthy(Game game) {
         game.setResult(OK);
@@ -119,6 +118,15 @@ public class TsgEndpoint {
         return true;
     }
 
+    private Boolean AllPlayersReady(Game game) {
+        for (Player p : game.getPlayers()) {
+            if (!p.getIsReady()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void DeleteOldGames() {
         DateTime dtNow = DateTime.now();
         ArrayList<Game> newGames = new ArrayList<>();
@@ -157,7 +165,6 @@ public class TsgEndpoint {
     }
 
     private Game AddMessage(Game game, TsgMessage message) {
-
         ArrayList<TsgMessage> messages = game.getMessages();
         messages.add(message);
         if (messages.size() > MAX_CHATS) {
@@ -168,7 +175,6 @@ public class TsgEndpoint {
     }
 
     private Game AddPlayer(Game game, Player player) {
-
         SetGameHealthy(game);
         for (Player p : game.getPlayers()) {
             if (p.getName().equalsIgnoreCase(player.getName())
@@ -223,7 +229,6 @@ public class TsgEndpoint {
     }
 
     private Game ProcessResults(Game game) {
-
         SetGameHealthy(game);
 
         if (game.getGameStatus() != Game.GameStatus.WaitingForScore) {
@@ -254,33 +259,11 @@ public class TsgEndpoint {
         TsgMessage mess = new TsgMessage("The game has finished", "");
         AddMessage(game, mess);
 
-        SendMessagesToClients(game.getPlayers(), SCORE);
+        SendMessagesToClients(game.getPlayers(), MAIN);
         return game;
     }
 
-    @ApiMethod(name = "StartGame")
-    public Game StartGame(@Named("GameName") String gameName, @Named("PlayerId") String playerId) {
-
-        Game game = SearchForGame(gameName);
-        if (game == null) {
-            // Unexpected situation, game not found
-            game = new Game(gameName);
-            game.setResult("Game '" + gameName + "' not found");
-            return game;
-        }
-
-        SetGameHealthy(game);
-        if (game.getGameStatus() == Game.GameStatus.Running) {
-            // Return the running game
-            return game;
-        }
-
-        Player player = SearchForPlayer(game, playerId);
-        if (player == null) {
-            game.setResult("You cannot start a game when you're not joined");
-            return game;
-        }
-
+    private Game StartGame(Game game) {
         if (game.getPlayers().size() <= 2) {
             game.setResult("A minimum of 3 players is required to start the game");
             return game;
@@ -288,16 +271,36 @@ public class TsgEndpoint {
 
         game = DetermineSpyAndPlayer(game);
 
+        // All unready
+        for (Player p : game.getPlayers()) {
+            p.setIsReady(false);
+        }
+
         TsgMessage mess = new TsgMessage("A new game has been started. Have fun!", "");
         AddMessage(game, mess);
-        SendMessagesToClients(game.getPlayers(), MAIN);
+        return game;
+    }
+
+    private Game FinishGame(Game game) {
+
+        AddWaitingPlayers(game);
+        game.setWaitingPlayers(new ArrayList<Player>());
+        game.setFinishTime(DateTime.now());
+        game.setGameStatus(Game.GameStatus.WaitingForScore);
+
+        // All unready
+        for (Player p : game.getPlayers()) {
+            p.setIsReady(false);
+        }
+
+        TsgMessage mess = new TsgMessage("Waiting for answers", "");
+        AddMessage(game, mess);
 
         return game;
     }
 
-    @ApiMethod(name = "FinishGame")
-    public Game FinishGame(@Named("GameName") String gameName, @Named("PlayerId") String playerId) {
-
+    @ApiMethod(name = "Ready")
+    public Game Ready(@Named("GameName") String gameName, @Named("PlayerId") String playerId) {
         Game game = SearchForGame(gameName);
         if (game == null) {
             // Unexpected situation, game not found
@@ -308,24 +311,70 @@ public class TsgEndpoint {
 
         SetGameHealthy(game);
 
-        if (game.getGameStatus() != Game.GameStatus.Running) {
-            // Game is not running
+        if (game.getGameStatus() != Game.GameStatus.Created &&
+                game.getGameStatus() != Game.GameStatus.Running &&
+                game.getGameStatus() != Game.GameStatus.Finished) {
+            // Ready function is not applicable
             return game;
         }
 
         Player player = SearchForPlayer(game, playerId);
         if (player == null) {
-            game.setResult("You cannot finish a game when you're not joined");
+            game.setResult("You cannot set yourself ready for a game when you're not joined");
             return game;
         }
 
-        AddWaitingPlayers(game);
-        game.setWaitingPlayers(new ArrayList<Player>());
-        game.setFinishTime(DateTime.now());
-        game.setGameStatus(Game.GameStatus.WaitingForScore);
-        TsgMessage mess = new TsgMessage("Waiting for answers", "");
-        AddMessage(game, mess);
+        player.setIsReady(true);
 
+        // Check, if all players are ready
+        if (!AllPlayersReady(game)) {
+            SendMessagesToClients(game.getPlayers(), MAIN);
+            return game;
+        }
+
+        // All ready, finish game if it was running
+        if (game.getGameStatus() == Game.GameStatus.Running) {
+            game = FinishGame(game);
+            SendMessagesToClients(game.getPlayers(), MAIN);
+            return game;
+        }
+
+        // All ready, start game if it was not running
+        if (game.getGameStatus() == Game.GameStatus.Created || game.getGameStatus() == Game.GameStatus.Finished) {
+            SendMessagesToClients(game.getPlayers(), MAIN);
+            game = StartGame(game);
+            return game;
+        }
+
+        return game;
+    }
+
+    @ApiMethod(name = "UnReady")
+    public Game UnReady(@Named("GameName") String gameName, @Named("PlayerId") String playerId) {
+        Game game = SearchForGame(gameName);
+        if (game == null) {
+            // Unexpected situation, game not found
+            game = new Game(gameName);
+            game.setResult("Game '" + gameName + "' not found");
+            return game;
+        }
+
+        SetGameHealthy(game);
+
+        if (game.getGameStatus() != Game.GameStatus.Created &&
+                game.getGameStatus() != Game.GameStatus.Running &&
+                game.getGameStatus() != Game.GameStatus.Finished) {
+            // Ready function is not applicable
+            return game;
+        }
+
+        Player player = SearchForPlayer(game, playerId);
+        if (player == null) {
+            game.setResult("You cannot set yourself unready for a game when you're not joined");
+            return game;
+        }
+
+        player.setIsReady(false);
         SendMessagesToClients(game.getPlayers(), MAIN);
         return game;
     }
@@ -350,7 +399,8 @@ public class TsgEndpoint {
     }
 
     @ApiMethod(name = "JoinGame")
-    public Game JoinGame(@Named("GameName") String gameName, @Named("PlayerId") String playerId, @Named("PlayerName") String playerName, @Named("PlayerToken") String playerToken) {
+    public Game JoinGame(@Named("GameName") String gameName, @Named("PlayerId") String
+            playerId, @Named("PlayerName") String playerName, @Named("PlayerToken") String playerToken) {
         DeleteOldGames();
         Game game = SearchForGame(gameName);
         if (game == null) {
@@ -387,7 +437,8 @@ public class TsgEndpoint {
     }
 
     @ApiMethod(name = "LeaveGame")
-    public Game LeaveGame(@Named("GameName") String gameName, @Named("PlayerId") String playerId) {
+    public Game LeaveGame(@Named("GameName") String gameName, @Named("PlayerId") String
+            playerId) {
         DeleteOldGames();
         Game game = SearchForGame(gameName);
         if (game == null) {
@@ -420,7 +471,8 @@ public class TsgEndpoint {
     }
 
     @ApiMethod(name = "Chat")
-    public Game Chat(@Named("GameName") String gameName, @Named("playerID") String playerId, @Named("title") String title, @Named("ChatTxt") String chatTxt) {
+    public Game Chat(@Named("GameName") String gameName, @Named("playerID") String
+            playerId, @Named("title") String title, @Named("ChatTxt") String chatTxt) {
         DeleteOldGames();
         Game game = SearchForGame(gameName);
         if (game == null) {
@@ -499,12 +551,13 @@ public class TsgEndpoint {
     public TsgVersion GetVersion() {
 
         TsgVersion v = new TsgVersion();
-        v.setVersion("V5");
+        v.setVersion("V6");
         return v;
     }
 
     @ApiMethod(name = "AddAnswer")
-    public Game AddAnswer(@Named("GameName") String gameName, @Named("PlayerId") String playerId, @Named("PlayerAnswer") String answer) {
+    public Game AddAnswer(@Named("GameName") String gameName, @Named("PlayerId") String
+            playerId, @Named("PlayerAnswer") String answer) {
 
         Game game = SearchForGame(gameName);
         if (game == null) {
@@ -530,7 +583,7 @@ public class TsgEndpoint {
         p.setAnswer(answer);
         Boolean allAnswersAreIn = AllPlayersAnswered(game);
         if (allAnswersAreIn) ProcessResults(game);
-        else SendMessagesToClients(game.getPlayers(), SCORE);
+        else SendMessagesToClients(game.getPlayers(), MAIN);
 
         return game;
     }

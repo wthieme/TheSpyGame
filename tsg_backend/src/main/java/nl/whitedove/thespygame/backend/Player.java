@@ -12,7 +12,8 @@ public class Player {
     private String Token;
     private int Points;
     private String Answer;
-    private boolean correctAnswer;
+    private boolean IsCorrectAnswer;
+    private boolean IsReady;
 
     public Player(String id, String name, String token) {
         this.setId(id);
@@ -21,6 +22,7 @@ public class Player {
         this.setRole("");
         this.setToken(token);
         this.setPoints(0);
+        this.setIsReady(false);
         this.setAnswer("");
         this.setCorrectAnswer(false);
     }
@@ -81,11 +83,19 @@ public class Player {
         Answer = answer;
     }
 
-    public boolean isCorrectAnswer() {
-        return correctAnswer;
+    public boolean getIsCorrectAnswer() {
+        return IsCorrectAnswer;
     }
 
-    public void setCorrectAnswer(boolean correctAnswer) {
-        this.correctAnswer = correctAnswer;
+    public void setCorrectAnswer(boolean isCorrectAnswer) {
+        this.IsCorrectAnswer = isCorrectAnswer;
+    }
+
+    public boolean getIsReady() {
+        return IsReady;
+    }
+
+    public void setIsReady(boolean ready) {
+        IsReady = ready;
     }
 }

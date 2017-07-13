@@ -37,10 +37,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -58,6 +61,7 @@ import org.joda.time.Seconds;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -77,8 +81,10 @@ import nl.whitedove.thespygame.backend.tsgApi.model.TsgVersion;
 public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver mReceiver;
-    private ScheduledExecutorService mExecuter = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture mFuture;
+    private ScheduledExecutorService mExecuterMain = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture mFutureMain;
+    private ScheduledExecutorService mExecuterScore = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture mFutureScore;
     private CastContext mCastContext;
     private CastSession mCastSession;
     private static TsgChannel mChannel;
@@ -170,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        StopTimer();
+        StopTimerMain();
+        StopTimerScore();
         UnregBroadcastReceiver();
         mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener,
                 CastSession.class);
@@ -262,12 +269,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //static inner class doesn't hold an implicit reference to the outer class
-    private static class MyHandler extends Handler {
+    private static class MyHandlerMain extends Handler {
         //Using a weak reference means you won't prevent garbage collection
         private final WeakReference<MainActivity> myClassWeakReference;
 
-        MyHandler(MainActivity myClassInstance) {
+        MyHandlerMain(MainActivity myClassInstance) {
             myClassWeakReference = new WeakReference<>(myClassInstance);
         }
 
@@ -275,7 +281,24 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             MainActivity ma = myClassWeakReference.get();
             if (ma != null) {
-                ma.updateTimerOnScreen();
+                ma.updateMainTimerOnScreen();
+            }
+        }
+    }
+
+    private static class MyHandlerScore extends Handler {
+        //Using a weak reference means you won't prevent garbage collection
+        private final WeakReference<MainActivity> myClassWeakReference;
+
+        MyHandlerScore(MainActivity myClassInstance) {
+            myClassWeakReference = new WeakReference<>(myClassInstance);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity ma = myClassWeakReference.get();
+            if (ma != null) {
+                ma.updateScoreTimerOnScreen();
             }
         }
     }
@@ -297,7 +320,187 @@ public class MainActivity extends AppCompatActivity {
         sendMessage(Helper.TimeValueMessage(time));
     }
 
-    private void updateTimerOnScreen() {
+    private void updateScoreTimerOnScreen() {
+        Helper.Log("updateTimerOnScreen SCORE");
+
+        DateTime timeNow = DateTime.now().plus(Helper.mOffset);
+        Period period = new Period(timeNow, Helper.mEndTimeFinish);
+
+        TextView tvTimerResult = (TextView) findViewById(R.id.tvTimerResult);
+        int totalSeconds = Seconds.secondsBetween(timeNow, Helper.mEndTimeFinish).getSeconds();
+        int col = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+
+        if (totalSeconds < 10) {
+            CastTimeColor(Color.RED);
+            tvTimerResult.setTextColor(Color.RED);
+        } else {
+            tvTimerResult.setTextColor(col);
+            CastTimeColor(col);
+        }
+
+        int minutes = Math.abs(period.getMinutes());
+        int seconds = Math.abs(period.getSeconds());
+        String timeVal = String.format(getString(R.string.TimeFormat), minutes, seconds);
+        CastTimeValue(timeVal);
+        tvTimerResult.setText(timeVal);
+
+        if (totalSeconds <= 0) {
+            ProcessResults();
+        }
+    }
+
+    private void InitViewsScore() {
+        Spinner spWhere = (Spinner) findViewById(R.id.spWhere);
+        Spinner spWho = (Spinner) findViewById(R.id.spWho);
+        TextView tvWhereAreWe = (TextView) findViewById(R.id.tvWhereAreWe);
+        TextView tvWhoIsSpy = (TextView) findViewById(R.id.tvWhoIsSpy);
+        Context context = this.getApplicationContext();
+
+        Player player = Helper.GetPlayer(Helper.mGame.getPlayers(), Helper.GetGuid(context), context);
+
+        if (player.getIsSpy()) {
+            spWho.setVisibility(View.GONE);
+            tvWhoIsSpy.setVisibility(View.GONE);
+            spWhere.setVisibility(View.VISIBLE);
+            tvWhereAreWe.setVisibility(View.VISIBLE);
+
+            if (Helper.mLocationsList != null && Helper.mLocationsList.getLocationNames() != null && Helper.mLocationsList.getLocationNames().size() > 0) {
+                ArrayList<String> locList = new ArrayList<>();
+                locList.addAll(Helper.mLocationsList.getLocationNames());
+                locList.add(0, "");
+                ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, locList);
+                spWhere.setAdapter(locationAdapter);
+                spWhere.setSelection(0, false);
+            }
+
+            spWhere.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    SendWhereAnswer();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    SendWhereAnswer();
+                }
+            });
+
+        } else {
+            spWho.setVisibility(View.VISIBLE);
+            tvWhoIsSpy.setVisibility(View.VISIBLE);
+            spWhere.setVisibility(View.GONE);
+            tvWhereAreWe.setVisibility(View.GONE);
+
+            if (Helper.mGame != null && Helper.mGame.getPlayers() != null && Helper.mGame.getPlayers().size() > 0) {
+                ArrayList<String> players = Helper.GetPlayerList(Helper.mGame.getPlayers(), Helper.GetNick(this));
+                String[] array = new String[players.size()];
+                players.toArray(array);
+                players.add(0, "");
+                ArrayAdapter<String> playerAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, players);
+                spWho.setAdapter(playerAdapter);
+                spWho.setSelection(0, false);
+            }
+
+            spWho.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    SendWhoAnswer();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    SendWhoAnswer();
+                }
+            });
+        }
+    }
+
+    private void ProcessResults() {
+        Context context = getApplicationContext();
+        new AsyncProcessResults().execute(context);
+    }
+
+    private class AsyncProcessResults extends AsyncTask<Context, Void, Pair<Context, Game>> {
+        @Override
+        protected Pair<Context, Game> doInBackground(Context... params) {
+            Context context = params[0];
+            String gameName = Helper.GetGame(context);
+            Game game = null;
+            try {
+                game = Helper.myApiService.processResults(gameName).execute();
+            } catch (IOException ignored) {
+            }
+            return Pair.create(context, game);
+        }
+
+        @Override
+        protected void onPostExecute(Pair<Context, Game> result) {
+            Game game = result.second;
+            Helper.SetGame(game);
+            ToonGameInfo();
+        }
+    }
+
+    private void SendWhereAnswer() {
+        Spinner spWhere = (Spinner) findViewById(R.id.spWhere);
+        String answer = spWhere.getSelectedItem().toString();
+        if (!answer.equalsIgnoreCase("")) SendAnswerInBackground(answer);
+    }
+
+    private void SendWhoAnswer() {
+        Spinner spWho = (Spinner) findViewById(R.id.spWho);
+        String answer = spWho.getSelectedItem().toString();
+        if (!answer.equalsIgnoreCase("")) SendAnswerInBackground(answer);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void SendAnswerInBackground(String answer) {
+        Context cxt = this.getApplicationContext();
+        new AsyncSendAnswer().execute(Pair.create(cxt, answer));
+    }
+
+    private class AsyncSendAnswer extends AsyncTask<Pair<Context, String>, Void, Pair<Context, Game>> {
+
+        @SafeVarargs
+        @Override
+        protected final Pair<Context, Game> doInBackground(Pair<Context, String>... params) {
+            Context context = params[0].first;
+            String answer = params[0].second;
+            String gameName = Helper.GetGame(context);
+            String playerId = Helper.GetGuid(context);
+            Game game = null;
+            try {
+                game = Helper.myApiService.addAnswer(gameName, playerId, answer).execute();
+            } catch (IOException ignored) {
+            }
+
+            return Pair.create(context, game);
+        }
+
+        @Override
+        protected void onPostExecute(Pair<Context, Game> result) {
+            Game game = result.second;
+            Context context = result.first;
+            String err = game.getResult();
+            if (!err.equalsIgnoreCase(Helper.OK)) {
+                Helper.ShowMessage(result.first, err, false);
+                return;
+            }
+
+            int toAnswer = 0;
+            for (Player p : game.getPlayers())
+                if (p.getAnswer().equalsIgnoreCase(""))
+                    toAnswer++;
+
+            if (toAnswer == 0)
+                Helper.ShowMessage(context, "Answer sent", false);
+            else
+                Helper.ShowMessage(context, String.format("Answer sent, waiting for %s more players", Integer.toString(toAnswer)), true);
+        }
+    }
+
+    private void updateMainTimerOnScreen() {
         Helper.Log("updateTimerOnScreen MAIN");
 
         DateTime timeNow = DateTime.now().plus(Helper.mOffset);
@@ -322,24 +525,22 @@ public class MainActivity extends AppCompatActivity {
         tvTimer.setText(timeVal);
 
         if (totalSeconds <= 0) {
-            if (Helper.mGame.getGameStatus().equalsIgnoreCase("Running")) FinishGame();
+            if (Helper.mGame.getGameStatus().equalsIgnoreCase("Running")) Ready(true);
         }
     }
 
-    private void StopTimer() {
-        if (mExecuter != null && mFuture != null) {
-            mFuture.cancel(false);
-            Helper.Log("Task gestopt");
+    private void StopTimerMain() {
+        if (mExecuterMain != null && mFutureMain != null) {
+            mFutureMain.cancel(false);
         }
     }
 
-    private void StartTimer() {
-        if (mExecuter == null) {
-            mExecuter = Executors.newSingleThreadScheduledExecutor();
-            Helper.Log("Executer gemaakt");
+    private void StartTimerMain() {
+        if (mExecuterMain == null) {
+            mExecuterMain = Executors.newSingleThreadScheduledExecutor();
         }
 
-        final MyHandler mHandler = new MyHandler(this);
+        final MyHandlerMain mHandler = new MyHandlerMain(this);
 
         Runnable task = new Runnable() {
             public void run() {
@@ -352,13 +553,42 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        if (mFuture != null) {
-            mFuture.cancel(false);
-            Helper.Log("Task gestopt");
+        if (mFutureMain != null) {
+            mFutureMain.cancel(false);
         }
 
-        mFuture = mExecuter.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
-        Helper.Log("Task geactiveerd");
+        mFutureMain = mExecuterMain.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
+    }
+
+    private void StopTimerScore() {
+        if (mExecuterScore != null && mFutureScore != null) {
+            mFutureScore.cancel(false);
+        }
+    }
+
+    private void StartTimerScore() {
+        if (mExecuterScore == null) {
+            mExecuterScore = Executors.newSingleThreadScheduledExecutor();
+        }
+
+        final MyHandlerScore mHandler = new MyHandlerScore(this);
+
+        Runnable task = new Runnable() {
+            public void run() {
+                Context cxt = getApplicationContext();
+                try {
+                    mHandler.obtainMessage(1).sendToTarget();
+                } catch (Exception e) {
+                    Helper.ShowMessage(cxt, e.getMessage(), false);
+                }
+            }
+        };
+
+        if (mFutureScore != null) {
+            mFutureScore.cancel(false);
+        }
+
+        mFutureScore = mExecuterScore.scheduleAtFixedRate(task, 0, 1, TimeUnit.SECONDS);
     }
 
     private void InitReceiver() {
@@ -397,19 +627,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fabStartGame = (FloatingActionButton) findViewById(R.id.fabStartGame);
-        fabStartGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StartGame();
+        CheckBox cbReady = (CheckBox) findViewById(R.id.cbReady);
+        cbReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Ready(isChecked);
             }
         });
 
-        FloatingActionButton fabFinishGame = (FloatingActionButton) findViewById(R.id.fabFinishGame);
-        fabFinishGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FinishGame();
+        CheckBox cbReadyScore = (CheckBox) findViewById(R.id.cbReadyScore);
+        cbReadyScore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Ready(isChecked);
             }
         });
 
@@ -522,11 +750,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void ScoreActivity() {
-        Intent intent = new Intent(this, ScoreActivity.class);
-        startActivity(intent);
     }
 
     private boolean CheckGame(Context cxt) {
@@ -669,7 +892,8 @@ public class MainActivity extends AppCompatActivity {
 
         String gameName = Helper.GetGame(cxt);
         if (gameName == null || gameName.trim().equals("")) {
-            StopTimer();
+            StopTimerMain();
+            StopTimerScore();
             return;
         }
 
@@ -870,30 +1094,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void StartGame() {
+    private void Ready(boolean isReady) {
         Context cxt = getApplicationContext();
         if (!Helper.TestInternet(cxt)) return;
         if (!CheckGame(cxt)) return;
-        StartGameInBackground();
+        StartReadyInBackground(isReady);
     }
 
-    private void StartGameInBackground() {
+    private void StartReadyInBackground(boolean isReady) {
         Context cxt = getApplicationContext();
-        new AsyncStartGame().execute(cxt);
+        new AsyncReady().execute(new ReadyInfo(cxt, isReady));
     }
 
-    private class AsyncStartGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
+    private class AsyncReady extends AsyncTask<ReadyInfo, Void, Pair<Context, Game>> {
 
         @Override
-        protected Pair<Context, Game> doInBackground(Context... params) {
+        protected Pair<Context, Game> doInBackground(ReadyInfo... params) {
 
-            Context context = params[0];
+            Context context = params[0].getContext();
+            boolean isReady = params[0].getIsReady();
             String gameName = Helper.GetGame(context);
             String playerId = Helper.GetGuid(context);
 
             Game game = null;
             try {
-                game = Helper.myApiService.startGame(gameName, playerId).execute();
+                if (isReady) {
+                    game = Helper.myApiService.ready(gameName, playerId).execute();
+                } else {
+                    game = Helper.myApiService.unReady(gameName, playerId).execute();
+                }
             } catch (IOException ignored) {
             }
             return Pair.create(context, game);
@@ -907,52 +1136,11 @@ public class MainActivity extends AppCompatActivity {
                 Helper.ShowMessage(result.first, err, false);
                 return;
             }
-            Helper.SetGame(game);
-            ToonGameInfo();
-            StartTimer();
-        }
-    }
-
-    private void FinishGame() {
-        Helper.Log("Finish aangeroepen");
-        StopTimer();
-        Context cxt = getApplicationContext();
-        if (!Helper.TestInternet(cxt)) return;
-        if (!CheckGame(cxt)) return;
-        FinishGameInBackground();
-    }
-
-    private void FinishGameInBackground() {
-        Context cxt = getApplicationContext();
-        new AsyncFinishGame().execute(cxt);
-    }
-
-    private class AsyncFinishGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
-
-        @Override
-        protected Pair<Context, Game> doInBackground(Context... params) {
-
-            Context context = params[0];
-            String gameName = Helper.GetGame(context);
-            String playerId = Helper.GetGuid(context);
-
-            Game game = null;
-            try {
-                game = Helper.myApiService.finishGame(gameName, playerId).execute();
-            } catch (IOException ignored) {
+            if (game.getGameStatus().equalsIgnoreCase("Running")) {
+                StartTimerMain();
+            } else {
+                StopTimerMain();
             }
-            return Pair.create(context, game);
-        }
-
-        @Override
-        protected void onPostExecute(Pair<Context, Game> result) {
-            Game game = result.second;
-            String err = game.getResult();
-            if (!err.equalsIgnoreCase(Helper.OK)) {
-                Helper.ShowMessage(result.first, err, false);
-                return;
-            }
-            StopTimer();
             Helper.SetGame(game);
             ToonGameInfo();
         }
@@ -1075,11 +1263,18 @@ public class MainActivity extends AppCompatActivity {
         TextView tvLocation = (TextView) findViewById(R.id.tvLocation);
         TextView tvTimer = (TextView) findViewById(R.id.tvTimer);
         TextView tvGameStatus = (TextView) findViewById(R.id.tvGameStatus);
-        FloatingActionButton fabStartGame = (FloatingActionButton) findViewById(R.id.fabStartGame);
-        FloatingActionButton fabFinishGame = (FloatingActionButton) findViewById(R.id.fabFinishGame);
+        CheckBox cbReady = (CheckBox) findViewById(R.id.cbReady);
+        CheckBox cbReadyScore = (CheckBox) findViewById(R.id.cbReadyScore);
         LinearLayout llButtonRow2 = (LinearLayout) findViewById(R.id.llButtonRow2);
         LinearLayout llButtonRow3 = (LinearLayout) findViewById(R.id.llButtonRow3);
+        RelativeLayout rlMain = (RelativeLayout) findViewById(R.id.rlMain);
+        RelativeLayout rlScore = (RelativeLayout) findViewById(R.id.rlScore);
         ListView lvMessages = (ListView) findViewById(R.id.lvMessages);
+        TextView tvResultWho = (TextView) findViewById(R.id.tvResultWho);
+        TextView tvResultWhere = (TextView) findViewById(R.id.tvResultWhere);
+        Player theSpy = Helper.SearchForTheSpy(game);
+        TextView tvTimerResult = (TextView) findViewById(R.id.tvTimerResult);
+
         int nrOfPlayers = (game.getPlayers() == null) ? 0 : game.getPlayers().size();
 
         String packname = this.getPackageName();
@@ -1093,12 +1288,15 @@ public class MainActivity extends AppCompatActivity {
             but.setText("");
         }
 
+        int aantalReady = 0;
+
         for (int i = 0; i < nrOfPlayers; i++) {
             String name = Helper.BTN_NAME + Integer.toString(i + 1);
             int id = res.getIdentifier(name, "id", packname);
             Button but = (Button) findViewById(id);
             but.setTag(game.getPlayers().get(i).getName());
             but.setText(GetPlayerNameWithScore(game.getPlayers().get(i)));
+            if (game.getPlayers().get(i).getIsReady()) aantalReady++;
         }
 
         String gameStatus = game.getGameStatus();
@@ -1106,8 +1304,11 @@ public class MainActivity extends AppCompatActivity {
         tvGameStatus.setText(String.format(getString(R.string.Status), gameStatus));
         switch (gameStatus) {
             case "Unknown": {
-                fabStartGame.setVisibility(View.GONE);
-                fabFinishGame.setVisibility(View.GONE);
+                StopTimerMain();
+                StopTimerScore();
+                rlMain.setVisibility(View.VISIBLE);
+                rlScore.setVisibility(View.GONE);
+                cbReady.setVisibility(View.GONE);
                 tvSpy.setVisibility(View.GONE);
                 tvLocation.setVisibility(View.GONE);
                 llButtonRow2.setVisibility(View.VISIBLE);
@@ -1115,8 +1316,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case "Created": {
-                fabStartGame.setVisibility(View.VISIBLE);
-                fabFinishGame.setVisibility(View.GONE);
+                StopTimerMain();
+                StopTimerScore();
+                rlMain.setVisibility(View.VISIBLE);
+                rlScore.setVisibility(View.GONE);
+                cbReady.setVisibility(View.VISIBLE);
+                cbReady.setText(String.format(getString(R.string.ReadyToStart), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 tvSpy.setVisibility(View.GONE);
                 tvLocation.setVisibility(View.GONE);
                 llButtonRow2.setVisibility(View.VISIBLE);
@@ -1124,9 +1329,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case "Running": {
-                StartTimer();
-                fabStartGame.setVisibility(View.GONE);
-                fabFinishGame.setVisibility(View.VISIBLE);
+                StartTimerMain();
+                StopTimerScore();
+                rlMain.setVisibility(View.VISIBLE);
+                rlScore.setVisibility(View.GONE);
+                cbReady.setVisibility(View.VISIBLE);
+                cbReady.setText(String.format(getString(R.string.ReadyToFinish), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 tvSpy.setVisibility(View.VISIBLE);
                 Player player = Helper.GetPlayer(game.getPlayers(), Helper.GetGuid(this), this);
 
@@ -1145,61 +1353,52 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case "WaitingForScore": {
-                StopTimer();
+                InitViewsScore();
+                StopTimerMain();
+                StartTimerScore();
+                rlMain.setVisibility(View.GONE);
+                rlScore.setVisibility(View.VISIBLE);
                 tvTimer.setText(getString(R.string.TimeZero));
                 tvTimer.setTextColor(Color.RED);
-                fabStartGame.setVisibility(View.GONE);
-                fabFinishGame.setVisibility(View.VISIBLE);
-                tvSpy.setVisibility(View.VISIBLE);
-                tvLocation.setVisibility(View.VISIBLE);
+                cbReadyScore.setVisibility(View.GONE);
+                tvSpy.setVisibility(View.GONE);
+                tvLocation.setVisibility(View.GONE);
+                tvResultWhere.setVisibility(View.GONE);
 
-                Player player = Helper.GetPlayer(game.getPlayers(), Helper.GetGuid(this), this);
+                int toAnswer = 0;
+                for (Player p : game.getPlayers())
+                    if (p.getAnswer().equalsIgnoreCase(""))
+                        toAnswer++;
 
-                if (player.getIsSpy()) {
-                    tvLocation.setVisibility(View.GONE);
-                    tvLocation.setText("");
-                    tvSpy.setText(getString(R.string.Spy));
-                } else {
-                    tvLocation.setVisibility(View.VISIBLE);
-                    tvLocation.setText(String.format(getString(R.string.Location), player.getRole(), game.getLocation()));
-                    tvSpy.setText(getString(R.string.NoSpy));
-                }
-
-                if (Helper.ScoreTime.plusSeconds(1).isBeforeNow()) {
-                    ScoreActivity();
-                } else {
-                    CastTimeValue(getString(R.string.TimeZero));
-                    CastTimeColor(Color.RED);
-                }
-                Helper.ScoreTime = DateTime.now();
+                tvResultWho.setText(String.format(getString(R.string.ResultWait), Integer.toString(toAnswer)));
+                ToonScores();
                 break;
             }
 
             case "Finished": {
-                StopTimer();
+                InitViewsScore();
+                StopTimerMain();
+                StopTimerScore();
+                rlMain.setVisibility(View.GONE);
+                rlScore.setVisibility(View.VISIBLE);
                 CastTimeValue(getString(R.string.TimeZero));
                 CastTimeColor(Color.RED);
                 tvTimer.setText(getString(R.string.TimeZero));
                 tvTimer.setTextColor(Color.RED);
-                fabStartGame.setVisibility(View.VISIBLE);
-                fabFinishGame.setVisibility(View.GONE);
+                cbReadyScore.setVisibility(View.VISIBLE);
+                cbReadyScore.setText(String.format(getString(R.string.ReadyToStartNew), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 tvSpy.setVisibility(View.VISIBLE);
                 tvLocation.setVisibility(View.VISIBLE);
                 llButtonRow2.setVisibility(View.VISIBLE);
                 llButtonRow3.setVisibility(View.VISIBLE);
-
-                Player player = Helper.GetPlayer(game.getPlayers(), Helper.GetGuid(this), this);
-
-                if (player.getIsSpy()) {
-                    tvLocation.setVisibility(View.GONE);
-                    tvLocation.setText("");
-                    tvSpy.setText(getString(R.string.Spy));
-                } else {
-                    tvLocation.setVisibility(View.VISIBLE);
-                    tvLocation.setText(String.format(getString(R.string.Location), player.getRole(), game.getLocation()));
-                    tvSpy.setText(getString(R.string.NoSpy));
-                }
-
+                CastTimeValue(getString(R.string.TimeZero));
+                CastTimeColor(Color.RED);
+                tvTimerResult.setText(getString(R.string.TimeZero));
+                tvTimerResult.setTextColor(Color.RED);
+                tvResultWho.setText(String.format(getString(R.string.SpyResult), theSpy == null ? "Unknown" : theSpy.getName()));
+                tvResultWhere.setVisibility(View.VISIBLE);
+                tvResultWhere.setText(String.format(getString(R.string.LocationResult), game.getLocation()));
+                ToonScores();
                 break;
             }
         }
@@ -1214,6 +1413,66 @@ public class MainActivity extends AppCompatActivity {
             lvMessages.setAdapter(new
                     CustomListAdapterMessages(this, new ArrayList<TsgMessage>()
             ));
+    }
+
+    private void ToonScores() {
+        Game game = Helper.mGame;
+        List<Player> pSorted = new ArrayList<>(game.getPlayers());
+        Collections.sort(pSorted, new PlayerComparator());
+        Resources res = this.getResources();
+        String packname = this.getPackageName();
+        int nrOfPlayers = pSorted.size();
+
+        for (int i = 0; i < nrOfPlayers; i++) {
+            // Position
+            String name = Helper.TV_NAME + Integer.toString(i + 1) + "_1";
+            int id = res.getIdentifier(name, "id", packname);
+            TextView tv1 = (TextView) findViewById(id);
+            tv1.setText(Integer.toString(i + 1));
+
+            //Player name
+            name = Helper.TV_NAME + Integer.toString(i + 1) + "_2";
+            id = res.getIdentifier(name, "id", packname);
+            TextView tv2 = (TextView) findViewById(id);
+            tv2.setText(pSorted.get(i).getName());
+
+            //Total points
+            name = Helper.TV_NAME + Integer.toString(i + 1) + "_5";
+            id = res.getIdentifier(name, "id", packname);
+            TextView tv5 = (TextView) findViewById(id);
+            tv5.setText(Integer.toString(pSorted.get(i).getPoints()));
+
+            if (game.getGameStatus().equalsIgnoreCase("Finished")) {
+                // Answer
+                name = Helper.TV_NAME + Integer.toString(i + 1) + "_3";
+                id = res.getIdentifier(name, "id", packname);
+                TextView tv3 = (TextView) findViewById(id);
+                tv3.setText(pSorted.get(i).getAnswer());
+
+                // +1 or -
+                name = Helper.TV_NAME + Integer.toString(i + 1) + "_4";
+                id = res.getIdentifier(name, "id", packname);
+                TextView tv4 = (TextView) findViewById(id);
+                Boolean correct = pSorted.get(i).getIsCorrectAnswer();
+                tv4.setText(correct ? "+1" : "-");
+
+                for (int j = 1; j < 6; j++) {
+                    name = Helper.TV_NAME + Integer.toString(i + 1) + "_" + Integer.toString(j);
+                    id = res.getIdentifier(name, "id", packname);
+                    TextView tv = (TextView) findViewById(id);
+                    if (correct)
+                        tv.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGreenBackground));
+                    else
+                        tv.setBackgroundColor(ContextCompat.getColor(this, R.color.colorRedBackground));
+                }
+            }
+        }
+        for (int i = nrOfPlayers; i < Helper.MAX_PLAYERS; i++) {
+            String name = Helper.TR_NAME + Integer.toString(i + 1);
+            int id = res.getIdentifier(name, "id", packname);
+            View tr = findViewById(id);
+            tr.setVisibility(View.GONE);
+        }
     }
 
     private void InitEdits() {
@@ -1350,7 +1609,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.

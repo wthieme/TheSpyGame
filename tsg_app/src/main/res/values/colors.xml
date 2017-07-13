@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#006064</color>
     <color name="colorAccent">#E0F2F7</color>
     <color name="colorResult">#795548</color>
-    <color name="colorTekst">#0097a7</color>
-    <color name="colorTekstLight">#b0bec5</color>
+    <color name="colorText">#0097a7</color>
+    <color name="colorTextLight">#b0bec5</color>
     <color name="colorBackground">#FFFBFB</color>
     <color name="colorButton">#bbdefb</color>
     <color name="colorWhite">#ffffff</color>

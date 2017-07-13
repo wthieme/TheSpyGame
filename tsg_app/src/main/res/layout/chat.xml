@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorTekst"
+            android:textColor="@color/colorText"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -48,7 +48,7 @@
         android:maxLength="140"
         android:maxLines="3"
         android:minLines="3"
-        android:textColor="@color/colorTekst"
+        android:textColor="@color/colorText"
         android:textIsSelectable="false">
 
     </EditText>

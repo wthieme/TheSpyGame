@@ -36,7 +36,7 @@ import nl.whitedove.thespygame.backend.tsgApi.model.TsgMessage;
 
 class Helper {
 
-    private static final String ApiUrl = "https://5-dot-thespygame-142522.appspot.com/_ah/api/";
+    private static final String ApiUrl = "https://6-dot-thespygame-142522.appspot.com/_ah/api/";
     static final String PrivacuUrl = "https://wthieme.github.io/privacytsg.html";
 
     static TsgApi myApiService = new TsgApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
@@ -50,7 +50,7 @@ class Helper {
     static Location mCurrentBestLocation;
     static final int ONE_MINUTE = 1000 * 60;
     static final int ONE_KM = 1000;
-    static final String REQUIRED_VERSION = "V5";
+    static final String REQUIRED_VERSION = "V6";
     static final String BTN_NAME = "btnPlayer";
     static final String TR_NAME = "tr";
     static final String TV_NAME = "tv";
@@ -168,6 +168,7 @@ class Helper {
         player.setName(Helper.GetNick(context));
         player.setRole("");
         player.setIsSpy(false);
+        player.setIsReady(false);
         if (players == null || players.size() == 0)
             return player;
 
@@ -180,7 +181,7 @@ class Helper {
     }
 
     static void SetGame(Game game) {
-        if (game==null) return;
+        if (game == null) return;
         mGame = game;
         mOffset = game.getLastUsed().getMillis() - DateTime.now().getMillis();
         int nrOfPlayers = game.getPlayers() == null ? 0 : game.getPlayers().size();
@@ -191,6 +192,8 @@ class Helper {
     }
 
     static Player SearchForTheSpy(Game game) {
+        if (game.getPlayers() == null || game.getPlayers().size() == 0) return null;
+
         for (Player p : game.getPlayers()) {
             if (p.getIsSpy()) {
                 return p;
@@ -259,9 +262,7 @@ class Helper {
                         } else {
                             gjson.put("rol" + Integer.toString(i + 1), p.getRole());
                         }
-                    }
-                    else
-                    {
+                    } else {
                         gjson.put("rol" + Integer.toString(i + 1), "");
                         gjson.put("ans" + Integer.toString(i + 1), "");
                         gjson.put("cor" + Integer.toString(i + 1), "");

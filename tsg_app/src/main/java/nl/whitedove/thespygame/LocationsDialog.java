@@ -51,7 +51,7 @@ class LocationsDialog extends Dialog implements
                     tv.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
                 } else {
                     tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    tv.setTextColor(ContextCompat.getColor(context, R.color.colorTekstLight));
+                    tv.setTextColor(ContextCompat.getColor(context, R.color.colorTextLight));
                 }
             }
         });
