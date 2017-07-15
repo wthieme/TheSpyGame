@@ -67,6 +67,9 @@
     <string name="Privacy">Privacy policy</string>
     <string name="ErrorLoadingPrivacy">Error loading privacy policy</string>
     <string name="ReadyToStart" formatted="false">Ready to start (%s/%s ready)</string>
-    <string name="ReadyToStartNew" formatted="false">Ready for a new game (%s/%s ready)</string>
+    <string name="ReadyToStartNew">Ready for a new game?</string>
+    <string name="ReadyPercent" formatted="false">(%s/%s ready)</string>
     <string name="ReadyToFinish" formatted="false">Ready to finish (%s/%s ready)</string>
+    <string name="no">N</string>
+    <string name="yes">Y</string>
 </resources>

@@ -45,6 +45,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.cast.Cast;
@@ -627,20 +628,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        CheckBox cbReady = (CheckBox) findViewById(R.id.cbReady);
-        cbReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Ready(isChecked);
-            }
-        });
-
-        CheckBox cbReadyScore = (CheckBox) findViewById(R.id.cbReadyScore);
-        cbReadyScore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Ready(isChecked);
-            }
-        });
-
         FloatingActionButton fabChat = (FloatingActionButton) findViewById(R.id.fabChat);
         fabChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -648,6 +635,11 @@ public class MainActivity extends AppCompatActivity {
                 Chat("");
             }
         });
+
+        CheckBox cbReady = (CheckBox) findViewById(R.id.cbReady);
+        InitReadyCheckbox(cbReady, false);
+        Switch swReadyScore = (Switch) findViewById(R.id.swReadyScore);
+        InitReadySwitch(swReadyScore, false);
 
         Button btnPlayer1 = (Button) findViewById(R.id.btnPlayer1);
         btnPlayer1.setOnClickListener(new View.OnClickListener() {
@@ -748,6 +740,26 @@ public class MainActivity extends AppCompatActivity {
                     NewMenu();
                 } catch (IOException ignored) {
                 }
+            }
+        });
+    }
+
+    private void InitReadySwitch(Switch swReady, boolean checked) {
+        swReady.setOnCheckedChangeListener(null);
+        swReady.setChecked(checked);
+        swReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Ready(isChecked);
+            }
+        });
+    }
+
+    private void InitReadyCheckbox(CheckBox cbReady, boolean checked) {
+        cbReady.setOnCheckedChangeListener(null);
+        cbReady.setChecked(checked);
+        cbReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Ready(isChecked);
             }
         });
     }
@@ -1264,7 +1276,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tvTimer = (TextView) findViewById(R.id.tvTimer);
         TextView tvGameStatus = (TextView) findViewById(R.id.tvGameStatus);
         CheckBox cbReady = (CheckBox) findViewById(R.id.cbReady);
-        CheckBox cbReadyScore = (CheckBox) findViewById(R.id.cbReadyScore);
+        Switch swReadyScore = (Switch) findViewById(R.id.swReadyScore);
         LinearLayout llButtonRow2 = (LinearLayout) findViewById(R.id.llButtonRow2);
         LinearLayout llButtonRow3 = (LinearLayout) findViewById(R.id.llButtonRow3);
         RelativeLayout rlMain = (RelativeLayout) findViewById(R.id.rlMain);
@@ -1272,8 +1284,10 @@ public class MainActivity extends AppCompatActivity {
         ListView lvMessages = (ListView) findViewById(R.id.lvMessages);
         TextView tvResultWho = (TextView) findViewById(R.id.tvResultWho);
         TextView tvResultWhere = (TextView) findViewById(R.id.tvResultWhere);
-        Player theSpy = Helper.SearchForTheSpy(game);
         TextView tvTimerResult = (TextView) findViewById(R.id.tvTimerResult);
+
+        Player theSpy = Helper.SearchForTheSpy(game);
+        Player player = Helper.GetPlayer(game.getPlayers(), Helper.GetGuid(this), this);
 
         int nrOfPlayers = (game.getPlayers() == null) ? 0 : game.getPlayers().size();
 
@@ -1321,6 +1335,7 @@ public class MainActivity extends AppCompatActivity {
                 rlMain.setVisibility(View.VISIBLE);
                 rlScore.setVisibility(View.GONE);
                 cbReady.setVisibility(View.VISIBLE);
+                InitReadyCheckbox(cbReady, player.getIsReady());
                 cbReady.setText(String.format(getString(R.string.ReadyToStart), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 tvSpy.setVisibility(View.GONE);
                 tvLocation.setVisibility(View.GONE);
@@ -1334,9 +1349,9 @@ public class MainActivity extends AppCompatActivity {
                 rlMain.setVisibility(View.VISIBLE);
                 rlScore.setVisibility(View.GONE);
                 cbReady.setVisibility(View.VISIBLE);
+                InitReadyCheckbox(cbReady, player.getIsReady());
                 cbReady.setText(String.format(getString(R.string.ReadyToFinish), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 tvSpy.setVisibility(View.VISIBLE);
-                Player player = Helper.GetPlayer(game.getPlayers(), Helper.GetGuid(this), this);
 
                 if (player.getIsSpy()) {
                     tvLocation.setVisibility(View.GONE);
@@ -1360,7 +1375,7 @@ public class MainActivity extends AppCompatActivity {
                 rlScore.setVisibility(View.VISIBLE);
                 tvTimer.setText(getString(R.string.TimeZero));
                 tvTimer.setTextColor(Color.RED);
-                cbReadyScore.setVisibility(View.GONE);
+                swReadyScore.setVisibility(View.GONE);
                 tvSpy.setVisibility(View.GONE);
                 tvLocation.setVisibility(View.GONE);
                 tvResultWhere.setVisibility(View.GONE);
@@ -1385,8 +1400,12 @@ public class MainActivity extends AppCompatActivity {
                 CastTimeColor(Color.RED);
                 tvTimer.setText(getString(R.string.TimeZero));
                 tvTimer.setTextColor(Color.RED);
-                cbReadyScore.setVisibility(View.VISIBLE);
-                cbReadyScore.setText(String.format(getString(R.string.ReadyToStartNew), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
+                swReadyScore.setVisibility(View.VISIBLE);
+                InitReadySwitch(swReadyScore, player.getIsReady());
+                //swReadyScore.setText(String.format(getString(R.string.ReadyToStartNew), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
+                int colRed = ContextCompat.getColor(this, R.color.colorRedBackground);
+                int colGreen = ContextCompat.getColor(this, R.color.colorGreenBackground);
+                swReadyScore.setBackgroundColor(player.getIsReady() ? colGreen : colRed);
                 tvSpy.setVisibility(View.VISIBLE);
                 tvLocation.setVisibility(View.VISIBLE);
                 llButtonRow2.setVisibility(View.VISIBLE);
