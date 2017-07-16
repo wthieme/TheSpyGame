@@ -388,18 +388,45 @@
             android:clipChildren="false"
             android:orientation="vertical">
 
-
-            <CheckBox
-                android:id="@+id/cbReady"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/llReady"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:text="@string/ReadyToStart"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
-                android:theme="@style/checkBoxStyle"
-                android:visibility="gone" />
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvReady"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/ReadyToStart"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp" />
+
+                <Switch
+                    android:id="@+id/swReady"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:showText="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textOff="@string/no"
+                    android:textOn="@string/yes"
+                    android:textSize="20sp"
+                    android:theme="@style/switchStyle" />
+
+                <TextView
+                    android:id="@+id/tvReadyPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/ReadyPercent"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1143,10 +1170,12 @@
         </TableLayout>
 
         <LinearLayout
+            android:id="@+id/llReadyScore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tlRanking"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -1167,8 +1196,16 @@
                 android:textOff="@string/no"
                 android:textOn="@string/yes"
                 android:textSize="20sp"
-                android:theme="@style/switchStyle"
-                android:visibility="gone" />
+                android:theme="@style/switchStyle" />
+
+            <TextView
+                android:id="@+id/tvReadyPercentScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/ReadyPercent"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
