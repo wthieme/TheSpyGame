@@ -590,13 +590,25 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvWaitingFor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvScoreBoard"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/ResultWait"
+            android:textColor="@color/colorResult"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/tvResultWho"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvScoreBoard"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="60dp"
-            android:text="@string/ResultWait"
+            android:layout_marginTop="15dp"
+            android:text="@string/SpyResult"
             android:textColor="@color/colorResult"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -607,7 +619,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvResultWho"
             android:layout_marginStart="10dp"
-            android:text="@string/ResultWait"
+            android:layout_marginTop="10dp"
+            android:text="@string/LocationResult"
             android:textColor="@color/colorResult"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -1175,8 +1188,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tlRanking"
             android:layout_marginTop="15dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"

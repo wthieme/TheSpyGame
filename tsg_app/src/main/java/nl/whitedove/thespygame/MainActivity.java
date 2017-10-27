@@ -37,7 +37,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,6 +45,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.cast.Cast;
@@ -58,6 +58,7 @@ import com.google.android.gms.cast.framework.SessionManagerListener;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.Seconds;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -754,16 +755,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void InitReadyCheckbox(CheckBox cbReady, boolean checked) {
-        cbReady.setOnCheckedChangeListener(null);
-        cbReady.setChecked(checked);
-        cbReady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Ready(isChecked);
-            }
-        });
-    }
-
     private boolean CheckGame(Context cxt) {
         String game = Helper.GetGame(cxt);
         if (game == null || game.isEmpty()) {
@@ -1280,10 +1271,13 @@ public class MainActivity extends AppCompatActivity {
         TextView tvReady = (TextView) findViewById(R.id.tvReady);
         TextView tvReadyPercent = (TextView) findViewById(R.id.tvReadyPercent);
         TextView tvReadyPercentScore = (TextView) findViewById(R.id.tvReadyPercentScore);
+        TextView tvWaitingFor = (TextView) findViewById(R.id.tvWaitingFor);
         LinearLayout llButtonRow2 = (LinearLayout) findViewById(R.id.llButtonRow2);
         LinearLayout llButtonRow3 = (LinearLayout) findViewById(R.id.llButtonRow3);
         LinearLayout llReady = (LinearLayout) findViewById(R.id.llReady);
         LinearLayout llReadyScore = (LinearLayout) findViewById(R.id.llReadyScore);
+        LinearLayout llWhereAreWe = (LinearLayout) findViewById(R.id.llWhereAreWe);
+        LinearLayout llWhoIsSpy = (LinearLayout) findViewById(R.id.llWhoIsSpy);
 
         RelativeLayout rlMain = (RelativeLayout) findViewById(R.id.rlMain);
         RelativeLayout rlScore = (RelativeLayout) findViewById(R.id.rlScore);
@@ -1383,13 +1377,15 @@ public class MainActivity extends AppCompatActivity {
                 InitViewsScore();
                 StopTimerMain();
                 StartTimerScore();
+                tvWaitingFor.setVisibility(View.VISIBLE);
+                llWhoIsSpy.setVisibility(View.VISIBLE);
+                llWhereAreWe.setVisibility(View.VISIBLE);
                 rlMain.setVisibility(View.GONE);
                 rlScore.setVisibility(View.VISIBLE);
                 tvTimer.setText(getString(R.string.TimeZero));
                 tvTimer.setTextColor(Color.RED);
                 llReadyScore.setVisibility(View.GONE);
-                tvSpy.setVisibility(View.GONE);
-                tvLocation.setVisibility(View.GONE);
+                tvResultWho.setVisibility(View.GONE);
                 tvResultWhere.setVisibility(View.GONE);
 
                 int toAnswer = 0;
@@ -1397,7 +1393,7 @@ public class MainActivity extends AppCompatActivity {
                     if (p.getAnswer().equalsIgnoreCase(""))
                         toAnswer++;
 
-                tvResultWho.setText(String.format(getString(R.string.ResultWait), Integer.toString(toAnswer)));
+                tvWaitingFor.setText(String.format(getString(R.string.ResultWait), Integer.toString(toAnswer)));
                 ToonScores();
                 break;
             }
@@ -1406,6 +1402,9 @@ public class MainActivity extends AppCompatActivity {
                 InitViewsScore();
                 StopTimerMain();
                 StopTimerScore();
+                tvWaitingFor.setVisibility(View.GONE);
+                llWhoIsSpy.setVisibility(View.GONE);
+                llWhereAreWe.setVisibility(View.GONE);
                 rlMain.setVisibility(View.GONE);
                 rlScore.setVisibility(View.VISIBLE);
                 CastTimeValue(getString(R.string.TimeZero));
@@ -1416,14 +1415,11 @@ public class MainActivity extends AppCompatActivity {
                 InitReadySwitch(swReadyScore, player.getIsReady());
                 tvReadyPercentScore.setText(String.format(getString(R.string.ReadyPercent), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 swReadyScore.setBackgroundColor(player.getIsReady() ? colGreen : colRed);
-                tvSpy.setVisibility(View.VISIBLE);
-                tvLocation.setVisibility(View.VISIBLE);
-                llButtonRow2.setVisibility(View.VISIBLE);
-                llButtonRow3.setVisibility(View.VISIBLE);
                 CastTimeValue(getString(R.string.TimeZero));
                 CastTimeColor(Color.RED);
                 tvTimerResult.setText(getString(R.string.TimeZero));
                 tvTimerResult.setTextColor(Color.RED);
+                tvResultWho.setVisibility(View.VISIBLE);
                 tvResultWho.setText(String.format(getString(R.string.SpyResult), theSpy == null ? "Unknown" : theSpy.getName()));
                 tvResultWhere.setVisibility(View.VISIBLE);
                 tvResultWhere.setText(String.format(getString(R.string.LocationResult), game.getLocation()));
@@ -1502,6 +1498,12 @@ public class MainActivity extends AppCompatActivity {
             View tr = findViewById(id);
             tr.setVisibility(View.GONE);
         }
+
+        TableLayout tlRanking = (TableLayout) findViewById(R.id.tlRanking);
+        tlRanking.invalidate();
+        tlRanking.setVisibility(View.GONE);
+        tlRanking.setVisibility(View.VISIBLE);
+
     }
 
     private void InitEdits() {

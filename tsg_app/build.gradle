@@ -1,13 +1,25 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:1.3.3'
+        classpath 'com.google.cloud.tools:endpoints-framework-gradle-plugin:1.0.2'
+    }
+}
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "nl.whitedove.thespygame"
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 23
         versionName "1.3.0"
     }
@@ -19,20 +31,27 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url 'https://maven.google.com'
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'joda-time:joda-time:2.9.9'
-    compile 'com.android.support:design:25.4.0'
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.android.support:mediarouter-v7:25.4.0'
-    compile 'com.google.firebase:firebase-messaging:11.0.2'
-    compile 'com.google.android.gms:play-services-cast-framework:11.0.2'
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
-    compile ('com.google.api-client:google-api-client-android:1.22.0')
-            {
-                exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-            }
-    compile project(path: ':tsg_backend', configuration: 'android-endpoints')
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:mediarouter-v7:26.1.0'
+    compile 'com.google.firebase:firebase-messaging:11.4.2'
+    compile 'com.google.android.gms:play-services-cast-framework:11.4.2'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.google.api-client:google-api-client-android:+' exclude module: 'httpclient'
+    endpointsServer project(path: ':tsg_backend', configuration: 'endpoints')
 }
 apply plugin: 'com.google.gms.google-services'
