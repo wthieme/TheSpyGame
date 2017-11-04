@@ -72,4 +72,6 @@
     <string name="ReadyToFinish" formatted="false">Ready to finish?</string>
     <string name="no">N</string>
     <string name="yes">Y</string>
+    <string name="Reset">Reset</string>
+    <string name="ResetGame">Reset game</string>
 </resources>

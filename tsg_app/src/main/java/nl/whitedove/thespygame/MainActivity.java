@@ -58,7 +58,6 @@ import com.google.android.gms.cast.framework.SessionManagerListener;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.Seconds;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -215,12 +214,25 @@ public class MainActivity extends AppCompatActivity {
             ShowPrivacyDialog();
             return true;
         }
+
+        if (id == R.id.itResetGame) {
+            ResetGame();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     void cleanupSession() {
         closeCustomMessageChannel();
         mCastSession = null;
+    }
+
+    private void ResetGame()
+    {
+        Helper.SetGame(this,"");
+        finish();
+        startActivity(getIntent());
     }
 
     private void startCustomMessageChannel() {
@@ -328,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
         DateTime timeNow = DateTime.now().plus(Helper.mOffset);
         Period period = new Period(timeNow, Helper.mEndTimeFinish);
 
-        TextView tvTimerResult = (TextView) findViewById(R.id.tvTimerResult);
+        TextView tvTimerResult = findViewById(R.id.tvTimerResult);
         int totalSeconds = Seconds.secondsBetween(timeNow, Helper.mEndTimeFinish).getSeconds();
         int col = ContextCompat.getColor(this, R.color.colorPrimaryDark);
 
@@ -352,10 +364,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void InitViewsScore() {
-        Spinner spWhere = (Spinner) findViewById(R.id.spWhere);
-        Spinner spWho = (Spinner) findViewById(R.id.spWho);
-        TextView tvWhereAreWe = (TextView) findViewById(R.id.tvWhereAreWe);
-        TextView tvWhoIsSpy = (TextView) findViewById(R.id.tvWhoIsSpy);
+        Spinner spWhere = findViewById(R.id.spWhere);
+        Spinner spWho = findViewById(R.id.spWho);
+        TextView tvWhereAreWe = findViewById(R.id.tvWhereAreWe);
+        TextView tvWhoIsSpy = findViewById(R.id.tvWhoIsSpy);
         Context context = this.getApplicationContext();
 
         Player player = Helper.GetPlayer(Helper.mGame.getPlayers(), Helper.GetGuid(context), context);
@@ -365,6 +377,8 @@ public class MainActivity extends AppCompatActivity {
             tvWhoIsSpy.setVisibility(View.GONE);
             spWhere.setVisibility(View.VISIBLE);
             tvWhereAreWe.setVisibility(View.VISIBLE);
+            int valSpWhere = spWhere.getSelectedItemPosition();
+            spWhere.setOnItemSelectedListener(null);
 
             if (Helper.mLocationsList != null && Helper.mLocationsList.getLocationNames() != null && Helper.mLocationsList.getLocationNames().size() > 0) {
                 ArrayList<String> locList = new ArrayList<>();
@@ -372,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
                 locList.add(0, "");
                 ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, locList);
                 spWhere.setAdapter(locationAdapter);
-                spWhere.setSelection(0, false);
+                spWhere.setSelection(valSpWhere, false);
             }
 
             spWhere.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -392,6 +406,8 @@ public class MainActivity extends AppCompatActivity {
             tvWhoIsSpy.setVisibility(View.VISIBLE);
             spWhere.setVisibility(View.GONE);
             tvWhereAreWe.setVisibility(View.GONE);
+            int valSpWho = spWho.getSelectedItemPosition();
+            spWho.setOnItemSelectedListener(null);
 
             if (Helper.mGame != null && Helper.mGame.getPlayers() != null && Helper.mGame.getPlayers().size() > 0) {
                 ArrayList<String> players = Helper.GetPlayerList(Helper.mGame.getPlayers(), Helper.GetNick(this));
@@ -400,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
                 players.add(0, "");
                 ArrayAdapter<String> playerAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, players);
                 spWho.setAdapter(playerAdapter);
-                spWho.setSelection(0, false);
+                spWho.setSelection(valSpWho, false);
             }
 
             spWho.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -420,10 +436,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void ProcessResults() {
         Context context = getApplicationContext();
-        new AsyncProcessResults().execute(context);
+        new AsyncProcessResults(this).execute(context);
     }
 
-    private class AsyncProcessResults extends AsyncTask<Context, Void, Pair<Context, Game>> {
+    private static class AsyncProcessResults extends AsyncTask<Context, Void, Pair<Context, Game>> {
+
+        private WeakReference<MainActivity> activityWeakReference;
+
+        AsyncProcessResults(MainActivity context) {
+            activityWeakReference = new WeakReference<>(context);
+        }
+
         @Override
         protected Pair<Context, Game> doInBackground(Context... params) {
             Context context = params[0];
@@ -438,20 +461,22 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
+            MainActivity activity = activityWeakReference.get();
+            if (activity == null) return;
             Game game = result.second;
             Helper.SetGame(game);
-            ToonGameInfo();
+            activity.ToonGameInfo();
         }
     }
 
     private void SendWhereAnswer() {
-        Spinner spWhere = (Spinner) findViewById(R.id.spWhere);
+        Spinner spWhere = findViewById(R.id.spWhere);
         String answer = spWhere.getSelectedItem().toString();
         if (!answer.equalsIgnoreCase("")) SendAnswerInBackground(answer);
     }
 
     private void SendWhoAnswer() {
-        Spinner spWho = (Spinner) findViewById(R.id.spWho);
+        Spinner spWho = findViewById(R.id.spWho);
         String answer = spWho.getSelectedItem().toString();
         if (!answer.equalsIgnoreCase("")) SendAnswerInBackground(answer);
     }
@@ -462,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
         new AsyncSendAnswer().execute(Pair.create(cxt, answer));
     }
 
-    private class AsyncSendAnswer extends AsyncTask<Pair<Context, String>, Void, Pair<Context, Game>> {
+    private static class AsyncSendAnswer extends AsyncTask<Pair<Context, String>, Void, Pair<Context, Game>> {
 
         @SafeVarargs
         @Override
@@ -490,15 +515,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            int toAnswer = 0;
-            for (Player p : game.getPlayers())
-                if (p.getAnswer().equalsIgnoreCase(""))
-                    toAnswer++;
-
-            if (toAnswer == 0)
-                Helper.ShowMessage(context, "Answer sent", false);
-            else
-                Helper.ShowMessage(context, String.format("Answer sent, waiting for %s more players", Integer.toString(toAnswer)), true);
+            Helper.ShowMessage(context, "Answer sent", false);
         }
     }
 
@@ -508,7 +525,7 @@ public class MainActivity extends AppCompatActivity {
         DateTime timeNow = DateTime.now().plus(Helper.mOffset);
         Period period = new Period(timeNow, Helper.mEndTimeStart);
 
-        TextView tvTimer = (TextView) findViewById(R.id.tvTimer);
+        TextView tvTimer = findViewById(R.id.tvTimer);
         int totalSeconds = Seconds.secondsBetween(timeNow, Helper.mEndTimeStart).getSeconds();
         int col = ContextCompat.getColor(this, R.color.colorPrimaryDark);
 
@@ -605,7 +622,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void InitButtons() {
 
-        FloatingActionButton fabCreateGame = (FloatingActionButton) findViewById(R.id.fabCreateGame);
+        FloatingActionButton fabCreateGame = findViewById(R.id.fabCreateGame);
         fabCreateGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -613,7 +630,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fabJoinGame = (FloatingActionButton) findViewById(R.id.fabJoinGame);
+        FloatingActionButton fabJoinGame = findViewById(R.id.fabJoinGame);
         fabJoinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -621,7 +638,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fabLeaveGame = (FloatingActionButton) findViewById(R.id.fabLeaveGame);
+        FloatingActionButton fabLeaveGame = findViewById(R.id.fabLeaveGame);
         fabLeaveGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -629,7 +646,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fabChat = (FloatingActionButton) findViewById(R.id.fabChat);
+        FloatingActionButton fabChat = findViewById(R.id.fabChat);
         fabChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -637,12 +654,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Switch swReady = (Switch) findViewById(R.id.swReady);
+        Switch swReady = findViewById(R.id.swReady);
         InitReadySwitch(swReady, false);
-        Switch swReadyScore = (Switch) findViewById(R.id.swReadyScore);
+        Switch swReadyScore = findViewById(R.id.swReadyScore);
         InitReadySwitch(swReadyScore, false);
 
-        Button btnPlayer1 = (Button) findViewById(R.id.btnPlayer1);
+        Button btnPlayer1 = findViewById(R.id.btnPlayer1);
         btnPlayer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -652,7 +669,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer2 = (Button) findViewById(R.id.btnPlayer2);
+        Button btnPlayer2 = findViewById(R.id.btnPlayer2);
         btnPlayer2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -662,7 +679,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer3 = (Button) findViewById(R.id.btnPlayer3);
+        Button btnPlayer3 = findViewById(R.id.btnPlayer3);
         btnPlayer3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -672,7 +689,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer4 = (Button) findViewById(R.id.btnPlayer4);
+        Button btnPlayer4 = findViewById(R.id.btnPlayer4);
         btnPlayer4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -682,7 +699,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer5 = (Button) findViewById(R.id.btnPlayer5);
+        Button btnPlayer5 = findViewById(R.id.btnPlayer5);
         btnPlayer5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -692,7 +709,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer6 = (Button) findViewById(R.id.btnPlayer6);
+        Button btnPlayer6 = findViewById(R.id.btnPlayer6);
         btnPlayer6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -702,7 +719,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer7 = (Button) findViewById(R.id.btnPlayer7);
+        Button btnPlayer7 = findViewById(R.id.btnPlayer7);
         btnPlayer7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -712,7 +729,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer8 = (Button) findViewById(R.id.btnPlayer8);
+        Button btnPlayer8 = findViewById(R.id.btnPlayer8);
         btnPlayer8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -722,7 +739,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnPlayer9 = (Button) findViewById(R.id.btnPlayer9);
+        Button btnPlayer9 = findViewById(R.id.btnPlayer9);
         btnPlayer9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -732,7 +749,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageView ivGameList = (ImageView) findViewById(R.id.ivGameList);
+        ImageView ivGameList = findViewById(R.id.ivGameList);
         ivGameList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -785,8 +802,8 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater li = LayoutInflater.from(this);
         @SuppressLint("InflateParams") final View chatView = li.inflate(R.layout.chat, null);
 
-        final Spinner spPlayer = (Spinner) chatView.findViewById(R.id.spPlayer);
-        final EditText etChatMessage = (EditText) chatView.findViewById(R.id.etChatMessage);
+        final Spinner spPlayer = chatView.findViewById(R.id.spPlayer);
+        final EditText etChatMessage = chatView.findViewById(R.id.etChatMessage);
 
         List<String> players = Helper.GetPlayerList(Helper.mGame.getPlayers(), Helper.GetNick(context));
         if (players == null || players.size() == 0) {
@@ -852,10 +869,16 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void SaveChatInBackground(TsgMessage mess) {
         Context cxt = getApplicationContext();
-        new AsyncSaveChat().execute(Pair.create(cxt, mess));
+        new AsyncSaveChat(this).execute(Pair.create(cxt, mess));
     }
 
-    private class AsyncSaveChat extends AsyncTask<Pair<Context, TsgMessage>, Void, Pair<Context, Game>> {
+    private static class AsyncSaveChat extends AsyncTask<Pair<Context, TsgMessage>, Void, Pair<Context, Game>> {
+
+        private WeakReference<MainActivity> activityWeakReference;
+
+        AsyncSaveChat(MainActivity context) {
+            activityWeakReference = new WeakReference<>(context);
+        }
 
         @SafeVarargs
         @Override
@@ -876,13 +899,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
+            MainActivity activity = activityWeakReference.get();
+            if (activity == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
                 Helper.ShowMessage(result.first, err, false);
             }
             Helper.SetGame(game);
-            ToonGameInfo();
+            activity.ToonGameInfo();
         }
     }
 
@@ -905,10 +930,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void GetGameStatusInBackground() {
         Context context = getApplicationContext();
-        new AsyncGetGameStatus().execute(context);
+        new AsyncGetGameStatus(this).execute(context);
     }
 
-    private class AsyncGetGameStatus extends AsyncTask<Context, Void, Pair<Context, Game>> {
+    private static class AsyncGetGameStatus extends AsyncTask<Context, Void, Pair<Context, Game>> {
+        private WeakReference<MainActivity> activityWeakReference;
+
+        AsyncGetGameStatus(MainActivity context) {
+            activityWeakReference = new WeakReference<>(context);
+        }
 
         @Override
         protected Pair<Context, Game> doInBackground(Context... params) {
@@ -926,9 +956,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
+            MainActivity activity = activityWeakReference.get();
+            if (activity == null) return;
             Game game = result.second;
             Helper.SetGame(game);
-            ToonGameInfo();
+            activity.ToonGameInfo();
         }
     }
 
@@ -944,10 +976,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void CreateGameInBackground() {
         Context cxt = getApplicationContext();
-        new AsyncCreateGame().execute(cxt);
+        new AsyncCreateGame(this).execute(cxt);
     }
 
-    private class AsyncCreateGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
+    private static class AsyncCreateGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
+        private WeakReference<MainActivity> activityWeakReference;
+
+        AsyncCreateGame(MainActivity context) {
+            activityWeakReference = new WeakReference<>(context);
+        }
 
         @Override
         protected Pair<Context, Game> doInBackground(Context... params) {
@@ -966,6 +1003,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
+            MainActivity activity = activityWeakReference.get();
+            if (activity == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
@@ -973,7 +1012,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             Helper.SetGame(game);
-            ToonGameInfo();
+            activity.ToonGameInfo();
         }
     }
 
@@ -990,10 +1029,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void JoinGameInBackground() {
         Context cxt = getApplicationContext();
-        new AsyncJoineGame().execute(cxt);
+        new AsyncJoineGame(this).execute(cxt);
     }
 
-    private class AsyncJoineGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
+    private static class AsyncJoineGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
+        private WeakReference<MainActivity> activityWeakReference;
+
+        AsyncJoineGame(MainActivity context) {
+            activityWeakReference = new WeakReference<>(context);
+        }
 
         @Override
         protected Pair<Context, Game> doInBackground(Context... params) {
@@ -1014,13 +1058,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
+            MainActivity activity = activityWeakReference.get();
+            if (activity == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
                 Helper.ShowMessage(result.first, err, false);
             }
             Helper.SetGame(game);
-            ToonGameInfo();
+            activity.ToonGameInfo();
         }
     }
 
@@ -1065,10 +1111,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void LeaveGameInBackground() {
         Context cxt = getApplicationContext();
-        new AsyncLeaveGame().execute(cxt);
+        new AsyncLeaveGame(this).execute(cxt);
     }
 
-    private class AsyncLeaveGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
+    private static class AsyncLeaveGame extends AsyncTask<Context, Void, Pair<Context, Game>> {
+        private WeakReference<MainActivity> activityWeakReference;
+
+        AsyncLeaveGame(MainActivity context) {
+            activityWeakReference = new WeakReference<>(context);
+        }
 
         @Override
         protected Pair<Context, Game> doInBackground(Context... params) {
@@ -1087,13 +1138,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
+            MainActivity activity = activityWeakReference.get();
+            if (activity == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
                 Helper.ShowMessage(result.first, err, false);
             }
             Helper.SetGame(game);
-            ToonGameInfo();
+            activity.ToonGameInfo();
         }
     }
 
@@ -1106,10 +1159,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void StartReadyInBackground(boolean isReady) {
         Context cxt = getApplicationContext();
-        new AsyncReady().execute(new ReadyInfo(cxt, isReady));
+        new AsyncReady(this).execute(new ReadyInfo(cxt, isReady));
     }
 
-    private class AsyncReady extends AsyncTask<ReadyInfo, Void, Pair<Context, Game>> {
+    private static class AsyncReady extends AsyncTask<ReadyInfo, Void, Pair<Context, Game>> {
+        private WeakReference<MainActivity> activityWeakReference;
+
+        AsyncReady(MainActivity context) {
+            activityWeakReference = new WeakReference<>(context);
+        }
 
         @Override
         protected Pair<Context, Game> doInBackground(ReadyInfo... params) {
@@ -1133,6 +1191,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
+            MainActivity activity = activityWeakReference.get();
+            if (activity == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
@@ -1140,12 +1200,12 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             if (game.getGameStatus().equalsIgnoreCase("Running")) {
-                StartTimerMain();
+                activity.StartTimerMain();
             } else {
-                StopTimerMain();
+                activity.StopTimerMain();
             }
             Helper.SetGame(game);
-            ToonGameInfo();
+            activity.ToonGameInfo();
         }
     }
 
@@ -1160,8 +1220,7 @@ public class MainActivity extends AppCompatActivity {
         new AsyncGetGameList().execute();
     }
 
-    private class AsyncGetGameList extends AsyncTask<Void, Void, GameListExtra> {
-
+    private static class AsyncGetGameList extends AsyncTask<Void, Void, GameListExtra> {
         @Override
         protected GameListExtra doInBackground(Void... params) {
 
@@ -1190,7 +1249,7 @@ public class MainActivity extends AppCompatActivity {
         new AsyncGetLocationList().execute();
     }
 
-    private class AsyncGetLocationList extends AsyncTask<Void, Void, LocationList> {
+    private static class AsyncGetLocationList extends AsyncTask<Void, Void, LocationList> {
 
         @Override
         protected LocationList doInBackground(Void... params) {
@@ -1231,7 +1290,7 @@ public class MainActivity extends AppCompatActivity {
         return v.getVersion();
     }
 
-    private class AsyncCheckVersion extends AsyncTask<Void, Void, TsgVersion> {
+    private static class AsyncCheckVersion extends AsyncTask<Void, Void, TsgVersion> {
 
         @Override
         protected TsgVersion doInBackground(Void... params) {
@@ -1262,29 +1321,29 @@ public class MainActivity extends AppCompatActivity {
         if (game == null) return;
 
         CastToTv();
-        TextView tvSpy = (TextView) findViewById(R.id.tvSpy);
-        TextView tvLocation = (TextView) findViewById(R.id.tvLocation);
-        TextView tvTimer = (TextView) findViewById(R.id.tvTimer);
-        TextView tvGameStatus = (TextView) findViewById(R.id.tvGameStatus);
-        Switch swReady = (Switch) findViewById(R.id.swReady);
-        Switch swReadyScore = (Switch) findViewById(R.id.swReadyScore);
-        TextView tvReady = (TextView) findViewById(R.id.tvReady);
-        TextView tvReadyPercent = (TextView) findViewById(R.id.tvReadyPercent);
-        TextView tvReadyPercentScore = (TextView) findViewById(R.id.tvReadyPercentScore);
-        TextView tvWaitingFor = (TextView) findViewById(R.id.tvWaitingFor);
-        LinearLayout llButtonRow2 = (LinearLayout) findViewById(R.id.llButtonRow2);
-        LinearLayout llButtonRow3 = (LinearLayout) findViewById(R.id.llButtonRow3);
-        LinearLayout llReady = (LinearLayout) findViewById(R.id.llReady);
-        LinearLayout llReadyScore = (LinearLayout) findViewById(R.id.llReadyScore);
-        LinearLayout llWhereAreWe = (LinearLayout) findViewById(R.id.llWhereAreWe);
-        LinearLayout llWhoIsSpy = (LinearLayout) findViewById(R.id.llWhoIsSpy);
+        TextView tvSpy = findViewById(R.id.tvSpy);
+        TextView tvLocation = findViewById(R.id.tvLocation);
+        TextView tvTimer = findViewById(R.id.tvTimer);
+        TextView tvGameStatus = findViewById(R.id.tvGameStatus);
+        Switch swReady = findViewById(R.id.swReady);
+        Switch swReadyScore = findViewById(R.id.swReadyScore);
+        TextView tvReady = findViewById(R.id.tvReady);
+        TextView tvReadyPercent = findViewById(R.id.tvReadyPercent);
+        TextView tvReadyPercentScore = findViewById(R.id.tvReadyPercentScore);
+        TextView tvWaitingFor = findViewById(R.id.tvWaitingFor);
+        LinearLayout llButtonRow2 = findViewById(R.id.llButtonRow2);
+        LinearLayout llButtonRow3 = findViewById(R.id.llButtonRow3);
+        LinearLayout llReady = findViewById(R.id.llReady);
+        LinearLayout llReadyScore = findViewById(R.id.llReadyScore);
+        LinearLayout llWhereAreWe = findViewById(R.id.llWhereAreWe);
+        LinearLayout llWhoIsSpy = findViewById(R.id.llWhoIsSpy);
 
-        RelativeLayout rlMain = (RelativeLayout) findViewById(R.id.rlMain);
-        RelativeLayout rlScore = (RelativeLayout) findViewById(R.id.rlScore);
-        ListView lvMessages = (ListView) findViewById(R.id.lvMessages);
-        TextView tvResultWho = (TextView) findViewById(R.id.tvResultWho);
-        TextView tvResultWhere = (TextView) findViewById(R.id.tvResultWhere);
-        TextView tvTimerResult = (TextView) findViewById(R.id.tvTimerResult);
+        RelativeLayout rlMain = findViewById(R.id.rlMain);
+        RelativeLayout rlScore = findViewById(R.id.rlScore);
+        ListView lvMessages = findViewById(R.id.lvMessages);
+        TextView tvResultWho = findViewById(R.id.tvResultWho);
+        TextView tvResultWhere = findViewById(R.id.tvResultWhere);
+        TextView tvTimerResult = findViewById(R.id.tvTimerResult);
 
         Player theSpy = Helper.SearchForTheSpy(game);
         Player player = Helper.GetPlayer(game.getPlayers(), Helper.GetGuid(this), this);
@@ -1299,7 +1358,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < Helper.MAX_PLAYERS; i++) {
             String name = Helper.BTN_NAME + Integer.toString(i + 1);
             int id = res.getIdentifier(name, "id", packname);
-            Button but = (Button) findViewById(id);
+            Button but = findViewById(id);
             but.setTag("");
             but.setText("");
         }
@@ -1309,7 +1368,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < nrOfPlayers; i++) {
             String name = Helper.BTN_NAME + Integer.toString(i + 1);
             int id = res.getIdentifier(name, "id", packname);
-            Button but = (Button) findViewById(id);
+            Button but = findViewById(id);
             but.setTag(game.getPlayers().get(i).getName());
             but.setText(GetPlayerNameWithScore(game.getPlayers().get(i)));
             if (game.getPlayers().get(i).getIsReady()) aantalReady++;
@@ -1440,6 +1499,7 @@ public class MainActivity extends AppCompatActivity {
             ));
     }
 
+    @SuppressLint("SetTextI18n")
     private void ToonScores() {
         Game game = Helper.mGame;
         List<Player> pSorted = new ArrayList<>(game.getPlayers());
@@ -1452,39 +1512,39 @@ public class MainActivity extends AppCompatActivity {
             // Position
             String name = Helper.TV_NAME + Integer.toString(i + 1) + "_1";
             int id = res.getIdentifier(name, "id", packname);
-            TextView tv1 = (TextView) findViewById(id);
+            TextView tv1 = findViewById(id);
             tv1.setText(Integer.toString(i + 1));
 
             //Player name
             name = Helper.TV_NAME + Integer.toString(i + 1) + "_2";
             id = res.getIdentifier(name, "id", packname);
-            TextView tv2 = (TextView) findViewById(id);
+            TextView tv2 = findViewById(id);
             tv2.setText(pSorted.get(i).getName());
 
             //Total points
             name = Helper.TV_NAME + Integer.toString(i + 1) + "_5";
             id = res.getIdentifier(name, "id", packname);
-            TextView tv5 = (TextView) findViewById(id);
+            TextView tv5 = findViewById(id);
             tv5.setText(Integer.toString(pSorted.get(i).getPoints()));
 
             if (game.getGameStatus().equalsIgnoreCase("Finished")) {
                 // Answer
                 name = Helper.TV_NAME + Integer.toString(i + 1) + "_3";
                 id = res.getIdentifier(name, "id", packname);
-                TextView tv3 = (TextView) findViewById(id);
+                TextView tv3 = findViewById(id);
                 tv3.setText(pSorted.get(i).getAnswer());
 
                 // +1 or -
                 name = Helper.TV_NAME + Integer.toString(i + 1) + "_4";
                 id = res.getIdentifier(name, "id", packname);
-                TextView tv4 = (TextView) findViewById(id);
+                TextView tv4 = findViewById(id);
                 Boolean correct = pSorted.get(i).getIsCorrectAnswer();
                 tv4.setText(correct ? "+1" : "-");
 
                 for (int j = 1; j < 6; j++) {
                     name = Helper.TV_NAME + Integer.toString(i + 1) + "_" + Integer.toString(j);
                     id = res.getIdentifier(name, "id", packname);
-                    TextView tv = (TextView) findViewById(id);
+                    TextView tv = findViewById(id);
                     if (correct)
                         tv.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGreenBackground));
                     else
@@ -1499,7 +1559,7 @@ public class MainActivity extends AppCompatActivity {
             tr.setVisibility(View.GONE);
         }
 
-        TableLayout tlRanking = (TableLayout) findViewById(R.id.tlRanking);
+        TableLayout tlRanking = findViewById(R.id.tlRanking);
         tlRanking.invalidate();
         tlRanking.setVisibility(View.GONE);
         tlRanking.setVisibility(View.VISIBLE);
@@ -1508,7 +1568,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void InitEdits() {
         final Context cxt = getApplicationContext();
-        final EditText etGame = (EditText) findViewById(R.id.etGame);
+        final EditText etGame = findViewById(R.id.etGame);
         String game = Helper.GetGame(cxt);
         etGame.setText(game);
 
@@ -1526,7 +1586,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final EditText etNickname = (EditText) findViewById(R.id.etNickname);
+        final EditText etNickname = findViewById(R.id.etNickname);
         String nick = Helper.GetNick(cxt);
         etNickname.setText(nick);
 
@@ -1549,11 +1609,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void HideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     private void SetGameName(String name) {
-        EditText etGame = (EditText) findViewById(R.id.etGame);
+        EditText etGame = findViewById(R.id.etGame);
         etGame.setText(name);
     }
 
@@ -1574,8 +1636,9 @@ public class MainActivity extends AppCompatActivity {
         ContextMenuAdapter adapter;
 
         inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        assert inflater != null;
         child = inflater.inflate(R.layout.listview_context_menu, null);
-        listView = (ListView) child.findViewById(R.id.listView_context_menu);
+        listView = child.findViewById(R.id.listView_context_menu);
 
         contextMenuItems = new ArrayList<>();
 
@@ -1631,7 +1694,7 @@ public class MainActivity extends AppCompatActivity {
 
         Location netLastLocation = null;
 
-        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Helper.ONE_MINUTE, Helper.ONE_KM, locationListener);
             netLastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }

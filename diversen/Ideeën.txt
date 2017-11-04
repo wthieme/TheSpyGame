@@ -1,0 +1,44 @@
+*Geen internet connectie in strings (+engels)
+*Toetsenbord laten verdwijnen als op knop gedrukt wordt. Programmatisch is niet makkelijk -> Zo gelaten
+*Beide edits altijd een randje (wel wat onderscheid tussen focussed en unfocessed)
+*Kunnen zien welke games er allemaal zijn (edit text veranderen naar editlistbox), knopje ernaast, of met longpress en menu "available games:"
+*Knopje available games doorzichtig
+*Chat venster onderin. Question for <list>
+*There is no one to chat with, wait for more players
+*Sony mams heeft bijna geen chat venster -> Lay-out improvements for pre-lollipop devices
+*Handleiding door op de spy te klikken
+-"Settings" menu met Help en Instellingen
+-Instellingen. Alarm sound when game finishes (is wellicht nog lastig, iets doen met datumtijd finished en datumtijd sound vastleggen
+-Meer locaties (stuk op 50), niet allemaal kunnen opvragen
+*Locaties kunnen zien op scherm
+*in gamelist status en aantal spelers, Dus: Wd (Created), 2 players
+-Onthouden welke locaties uitgezet zijn
+-Popup menu doorzichtig
+
+11 dec 2016 (v1.1.0)
+*score systeem
+
+12 dec 2016 
+*leeg bij locatie wordt goedgekeurd
+*chat knop crashed als er niemand in game is 
+*debug uit
+*In rules staat nog 3-8 spelers
+*leave knop. Rechts van Add, Nickname -> name. Name en Game even lang. 
+*Icon binnen fab iets groter
+*Toch nog melding bij join als je al gejoined bent
+*Leave met dialoog Yes/No Are you sure you want to leave? 
+*meldingen in chat. 
+*Game Created, Game started, Waiting for answers, Game is Finished, XX Joined, XX has left 
+*Spy icoon voor The spy game. Op plek van spy icoon komt cast icoon
+-Cast op TV. Nog uitzoeken met welke techniek.
+Op TV. Twee kolommen. Links:
+-The spy game
+-Game naam + resterende tijd
+-Game status en aantal spelers nog antwoorden 
+-Tabel met spelers en scores
+Rechts
+Chat venster met meldingen.
+Met from xx to yy                                                                          20:18
+  dit is een melding
+
+

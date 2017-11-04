@@ -1,0 +1,683 @@
+{
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "basePath": "/_ah/api/tsgApi/v1/",
+ "baseUrl": "https://thespygame-142522.appspot.com/_ah/api/tsgApi/v1/",
+ "batchPath": "batch",
+ "description": "This is an API",
+ "discoveryVersion": "v1",
+ "icons": {
+  "x16": "http://www.google.com/images/icons/product/search-16.gif",
+  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+ },
+ "id": "tsgApi:v1",
+ "kind": "discovery#restDescription",
+ "methods": {
+  "addAnswer": {
+   "httpMethod": "POST",
+   "id": "tsgApi.addAnswer",
+   "parameterOrder": [
+    "GameName",
+    "PlayerId",
+    "PlayerAnswer"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerId": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerAnswer": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "AddAnswer/{GameName}/{PlayerId}/{PlayerAnswer}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "chat": {
+   "httpMethod": "POST",
+   "id": "tsgApi.chat",
+   "parameterOrder": [
+    "GameName",
+    "playerID",
+    "title",
+    "ChatTxt"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "playerID": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "title": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "ChatTxt": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "Chat/{GameName}/{playerID}/{title}/{ChatTxt}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "createGame": {
+   "httpMethod": "POST",
+   "id": "tsgApi.createGame",
+   "parameterOrder": [
+    "GameName",
+    "Country"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "Country": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "CreateGame/{GameName}/{Country}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getGameList": {
+   "httpMethod": "POST",
+   "id": "tsgApi.getGameList",
+   "path": "GetGameList",
+   "response": {
+    "$ref": "GameList"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getGameListExtra": {
+   "httpMethod": "POST",
+   "id": "tsgApi.getGameListExtra",
+   "path": "GetGameListExtra",
+   "response": {
+    "$ref": "GameListExtra"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getGameStatus": {
+   "httpMethod": "POST",
+   "id": "tsgApi.getGameStatus",
+   "parameterOrder": [
+    "GameName"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "GetGameStatus/{GameName}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getLocationList": {
+   "httpMethod": "POST",
+   "id": "tsgApi.getLocationList",
+   "path": "GetLocationList",
+   "response": {
+    "$ref": "LocationList"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getVersion": {
+   "httpMethod": "POST",
+   "id": "tsgApi.getVersion",
+   "path": "GetVersion",
+   "response": {
+    "$ref": "TsgVersion"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "joinGame": {
+   "httpMethod": "POST",
+   "id": "tsgApi.joinGame",
+   "parameterOrder": [
+    "GameName",
+    "PlayerId",
+    "PlayerName",
+    "PlayerToken"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerId": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerToken": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "JoinGame/{GameName}/{PlayerId}/{PlayerName}/{PlayerToken}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "leaveGame": {
+   "httpMethod": "POST",
+   "id": "tsgApi.leaveGame",
+   "parameterOrder": [
+    "GameName",
+    "PlayerId"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerId": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "LeaveGame/{GameName}/{PlayerId}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "processResults": {
+   "httpMethod": "POST",
+   "id": "tsgApi.processResults",
+   "parameterOrder": [
+    "GameName"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "ProcessResults/{GameName}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "ready": {
+   "httpMethod": "POST",
+   "id": "tsgApi.ready",
+   "parameterOrder": [
+    "GameName",
+    "PlayerId"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerId": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "Ready/{GameName}/{PlayerId}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "unReady": {
+   "httpMethod": "POST",
+   "id": "tsgApi.unReady",
+   "parameterOrder": [
+    "GameName",
+    "PlayerId"
+   ],
+   "parameters": {
+    "GameName": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    },
+    "PlayerId": {
+     "location": "path",
+     "required": true,
+     "type": "string"
+    }
+   },
+   "path": "UnReady/{GameName}/{PlayerId}",
+   "response": {
+    "$ref": "Game"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ },
+ "name": "tsgApi",
+ "ownerDomain": "backend.thespygame.whitedove.nl",
+ "ownerName": "backend.thespygame.whitedove.nl",
+ "parameters": {
+  "alt": {
+   "default": "json",
+   "description": "Data format for the response.",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query",
+   "type": "string"
+  },
+  "fields": {
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query",
+   "type": "string"
+  },
+  "key": {
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query",
+   "type": "string"
+  },
+  "oauth_token": {
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query",
+   "type": "string"
+  },
+  "prettyPrint": {
+   "default": "true",
+   "description": "Returns response with indentations and line breaks.",
+   "location": "query",
+   "type": "boolean"
+  },
+  "quotaUser": {
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query",
+   "type": "string"
+  },
+  "userIp": {
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query",
+   "type": "string"
+  }
+ },
+ "protocol": "rest",
+ "rootUrl": "https://thespygame-142522.appspot.com/_ah/api/",
+ "schemas": {
+  "Chronology": {
+   "id": "Chronology",
+   "properties": {
+    "zone": {
+     "$ref": "DateTimeZone"
+    }
+   },
+   "type": "object"
+  },
+  "DateTime": {
+   "id": "DateTime",
+   "properties": {
+    "afterNow": {
+     "type": "boolean"
+    },
+    "beforeNow": {
+     "type": "boolean"
+    },
+    "centuryOfEra": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "chronology": {
+     "$ref": "Chronology"
+    },
+    "dayOfMonth": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "dayOfWeek": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "dayOfYear": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "equalNow": {
+     "type": "boolean"
+    },
+    "era": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "hourOfDay": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "millis": {
+     "format": "int64",
+     "type": "string"
+    },
+    "millisOfDay": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "millisOfSecond": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "minuteOfDay": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "minuteOfHour": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "monthOfYear": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "secondOfDay": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "secondOfMinute": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "weekOfWeekyear": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "weekyear": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "year": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "yearOfCentury": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "yearOfEra": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "zone": {
+     "$ref": "DateTimeZone"
+    }
+   },
+   "type": "object"
+  },
+  "DateTimeZone": {
+   "id": "DateTimeZone",
+   "properties": {
+    "fixed": {
+     "type": "boolean"
+    },
+    "id": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Game": {
+   "id": "Game",
+   "properties": {
+    "country": {
+     "type": "string"
+    },
+    "finishTime": {
+     "$ref": "DateTime"
+    },
+    "gameStatus": {
+     "$ref": "GameStatus"
+    },
+    "lastUsed": {
+     "$ref": "DateTime"
+    },
+    "location": {
+     "type": "string"
+    },
+    "messages": {
+     "items": {
+      "$ref": "TsgMessage"
+     },
+     "type": "array"
+    },
+    "name": {
+     "type": "string"
+    },
+    "players": {
+     "items": {
+      "$ref": "Player"
+     },
+     "type": "array"
+    },
+    "result": {
+     "type": "string"
+    },
+    "startTime": {
+     "$ref": "DateTime"
+    },
+    "waitingPlayers": {
+     "items": {
+      "$ref": "Player"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "GameInfo": {
+   "id": "GameInfo",
+   "properties": {
+    "country": {
+     "type": "string"
+    },
+    "gameStatus": {
+     "$ref": "GameStatus"
+    },
+    "name": {
+     "type": "string"
+    },
+    "nrOfPlayers": {
+     "format": "int32",
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "GameList": {
+   "id": "GameList",
+   "properties": {
+    "gameNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "GameListExtra": {
+   "id": "GameListExtra",
+   "properties": {
+    "games": {
+     "items": {
+      "$ref": "GameInfo"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "GameStatus": {
+   "enum": [
+    "Unknown",
+    "Created",
+    "Running",
+    "WaitingForScore",
+    "Finished"
+   ],
+   "enumDescriptions": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ],
+   "id": "GameStatus",
+   "type": "string"
+  },
+  "LocationList": {
+   "id": "LocationList",
+   "properties": {
+    "locationNames": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Player": {
+   "id": "Player",
+   "properties": {
+    "answer": {
+     "type": "string"
+    },
+    "correctAnswer": {
+     "type": "boolean"
+    },
+    "id": {
+     "type": "string"
+    },
+    "isCorrectAnswer": {
+     "type": "boolean"
+    },
+    "isReady": {
+     "type": "boolean"
+    },
+    "isSpy": {
+     "type": "boolean"
+    },
+    "name": {
+     "type": "string"
+    },
+    "points": {
+     "format": "int32",
+     "type": "integer"
+    },
+    "role": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TsgMessage": {
+   "id": "TsgMessage",
+   "properties": {
+    "messageDt": {
+     "$ref": "DateTime"
+    },
+    "messageTxt": {
+     "type": "string"
+    },
+    "title": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TsgVersion": {
+   "id": "TsgVersion",
+   "properties": {
+    "version": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "servicePath": "tsgApi/v1/",
+ "version": "v1"
+}

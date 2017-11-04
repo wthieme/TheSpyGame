@@ -10,18 +10,23 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/itLocations"
+        android:id="@+id/itResetGame"
         android:orderInCategory="100"
+        android:title="@string/ResetGame"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/itLocations"
+        android:orderInCategory="200"
         android:title="@string/Locations"
         app:showAsAction="never" />
     <item
         android:id="@+id/itRules"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         android:title="@string/Rules"
         app:showAsAction="never" />
     <item
         android:id="@+id/itPrivacy"
-        android:orderInCategory="300"
+        android:orderInCategory="400"
         android:title="@string/Privacy"
         app:showAsAction="never" />
 </menu>
