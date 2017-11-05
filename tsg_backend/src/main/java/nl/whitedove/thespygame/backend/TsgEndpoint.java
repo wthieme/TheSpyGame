@@ -66,7 +66,7 @@ public class TsgEndpoint {
             p.setRole(role);
             p.setIsSpy(false);
             p.setAnswer("");
-            p.setCorrectAnswer(false);
+            p.setIsCorrectAnswer(false);
         }
 
         int nrOfPlayers = players.size();
@@ -139,39 +139,36 @@ public class TsgEndpoint {
         CurrentGames = newGames;
     }
 
-    private Game AddWaitingPlayers(Game game) {
+    private void AddWaitingPlayers(Game game) {
         for (Player p : game.getWaitingPlayers()) {
             AddPlayer(game, p);
         }
-        return game;
     }
 
-    private Game AddPlayerToWaitingList(Game game, Player player) {
+    private void AddPlayerToWaitingList(Game game, Player player) {
         SetGameHealthy(game);
         for (Player p : game.getWaitingPlayers()) {
             if (p.getId().equalsIgnoreCase(player.getId())) {
                 // Already waiting
-                return game;
+                return;
             }
         }
 
         if (game.getPlayers().size() + game.getWaitingPlayers().size() >= MAX_PLAYERS) {
             game.setResult(String.format("Cannot add you to the waiting players, maximum number of players is %s", Integer.toString(MAX_PLAYERS)));
-            return game;
+            return;
         }
 
         game.getWaitingPlayers().add(player);
-        return game;
     }
 
-    private Game AddMessage(Game game, TsgMessage message) {
+    private void AddMessage(Game game, TsgMessage message) {
         ArrayList<TsgMessage> messages = game.getMessages();
         messages.add(message);
         if (messages.size() > MAX_CHATS) {
             messages.remove(0);
         }
         game.setMessages(messages);
-        return game;
     }
 
     private Game AddPlayer(Game game, Player player) {
@@ -228,18 +225,18 @@ public class TsgEndpoint {
         }
     }
 
-    private Game ProcessResults(Game game) {
+    private void ProcessResults(Game game) {
         SetGameHealthy(game);
 
         if (game.getGameStatus() != Game.GameStatus.WaitingForScore) {
             // Return the running game
-            return game;
+            return;
         }
 
         Player theSpy = SearchForTheSpy(game);
         if (theSpy == null) {
             // Return the running game
-            return game;
+            return;
         }
 
         for (Player p : game.getPlayers()) {
@@ -251,7 +248,7 @@ public class TsgEndpoint {
             else
                 correct = theSpy.getName().equalsIgnoreCase(answer);
 
-            p.setCorrectAnswer(correct);
+            p.setIsCorrectAnswer(correct);
             if (correct) p.setPoints(p.getPoints() + 1);
         }
         game.setGameStatus(Game.GameStatus.Finished);
@@ -260,7 +257,6 @@ public class TsgEndpoint {
         AddMessage(game, mess);
 
         SendMessagesToClients(game.getPlayers(), MAIN);
-        return game;
     }
 
     private Game StartGame(Game game) {
@@ -526,7 +522,7 @@ public class TsgEndpoint {
         DeleteOldGames();
         ArrayList<String> lnl = new ArrayList<>();
 
-        for (String l : LocationHelper.getLocationList()) lnl.add(l);
+        lnl.addAll(LocationHelper.getLocationList());
 
         LocationList ll = new LocationList();
         ll.setLocationNames(lnl);

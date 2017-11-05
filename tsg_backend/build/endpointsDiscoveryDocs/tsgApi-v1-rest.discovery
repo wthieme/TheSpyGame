@@ -622,9 +622,6 @@
     "answer": {
      "type": "string"
     },
-    "correctAnswer": {
-     "type": "boolean"
-    },
     "id": {
      "type": "string"
     },

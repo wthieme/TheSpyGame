@@ -61,7 +61,6 @@ class Helper {
     static Long mOffset;
     static DateTime mEndTimeStart = DateTime.now();
     static DateTime mEndTimeFinish = DateTime.now();
-    static DateTime ScoreTime = DateTime.now();
 
     static void Log(String log) {
         if (Helper.DEBUG) {
@@ -249,7 +248,7 @@ class Helper {
                     // Only show the spy and the role when the game is finished
                     if (game.getGameStatus().equalsIgnoreCase("Finished")) {
 
-                        if (p.getCorrectAnswer()) {
+                        if (p.getIsCorrectAnswer()) {
                             gjson.put("cor" + Integer.toString(i + 1), "+1");
                         } else {
                             gjson.put("cor" + Integer.toString(i + 1), "-");

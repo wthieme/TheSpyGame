@@ -24,7 +24,7 @@ public class Player {
         this.setPoints(0);
         this.setIsReady(false);
         this.setAnswer("");
-        this.setCorrectAnswer(false);
+        this.setIsCorrectAnswer(false);
     }
 
     public String getName() {
@@ -87,7 +87,7 @@ public class Player {
         return IsCorrectAnswer;
     }
 
-    public void setCorrectAnswer(boolean isCorrectAnswer) {
+    public void setIsCorrectAnswer(boolean isCorrectAnswer) {
         this.IsCorrectAnswer = isCorrectAnswer;
     }
 
