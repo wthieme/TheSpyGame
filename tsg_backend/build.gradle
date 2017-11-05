@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        google()
         jcenter()
     }
     dependencies {
@@ -9,22 +9,17 @@ buildscript {
     }
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'com.google.cloud.tools.appengine'
 apply plugin: 'com.google.cloud.tools.endpoints-framework-server'
 
 dependencies {
-    providedCompile group: 'javax.servlet', name: 'servlet-api', version:'2.5'
-    compile group: 'javax.servlet.jsp.jstl', name: 'jstl', version: '1.2'
-    compile 'joda-time:joda-time:2.9.9'
-    compile group: 'javax.inject', name: 'javax.inject', version: '1'
-    compile group: 'com.google.endpoints', name: 'endpoints-framework', version: '2.0.9'
+    compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+    implementation group: 'javax.servlet.jsp.jstl', name: 'jstl', version: '1.2'
+    implementation 'joda-time:joda-time:2.9.9'
+    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
+    implementation group: 'com.google.endpoints', name: 'endpoints-framework', version: '2.0.9'
 }
 
 appengine {
