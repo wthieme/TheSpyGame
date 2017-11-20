@@ -146,6 +146,7 @@ class Helper {
     }
 
     static void ShowMessage(Context cxt, String melding, boolean isLong) {
+        if (melding ==null || melding.equals("")) return;
         Helper.Log(melding);
         int duration = isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(cxt, melding, duration);

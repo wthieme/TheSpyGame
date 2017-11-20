@@ -228,9 +228,8 @@ public class MainActivity extends AppCompatActivity {
         mCastSession = null;
     }
 
-    private void ResetGame()
-    {
-        Helper.SetGame(this,"");
+    private void ResetGame() {
+        Helper.SetGame(this, "");
         finish();
         startActivity(getIntent());
     }
@@ -345,12 +344,10 @@ public class MainActivity extends AppCompatActivity {
         int col = ContextCompat.getColor(this, R.color.colorPrimaryDark);
 
         if (totalSeconds < 10) {
-            CastTimeColor(Color.RED);
-            tvTimerResult.setTextColor(Color.RED);
-        } else {
-            tvTimerResult.setTextColor(col);
-            CastTimeColor(col);
+            col = ContextCompat.getColor(this, R.color.colorRood);
         }
+        tvTimerResult.setTextColor(col);
+        CastTimeColor(col);
 
         int minutes = Math.abs(period.getMinutes());
         int seconds = Math.abs(period.getSeconds());
@@ -530,12 +527,11 @@ public class MainActivity extends AppCompatActivity {
         int col = ContextCompat.getColor(this, R.color.colorPrimaryDark);
 
         if (totalSeconds < 60) {
-            CastTimeColor(Color.RED);
-            tvTimer.setTextColor(Color.RED);
-        } else {
-            tvTimer.setTextColor(col);
-            CastTimeColor(col);
+            col = ContextCompat.getColor(this, R.color.colorRood);
         }
+
+        tvTimer.setTextColor(col);
+        CastTimeColor(col);
 
         int minutes = Math.abs(period.getMinutes());
         int seconds = Math.abs(period.getSeconds());
@@ -1286,7 +1282,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String CheckVersionInBackgroundAndWait() throws ExecutionException, InterruptedException, TimeoutException {
-        TsgVersion v = new AsyncCheckVersion().execute().get(10000, TimeUnit.MILLISECONDS);
+        TsgVersion v = new AsyncCheckVersion().execute().get(5000, TimeUnit.MILLISECONDS);
         return v.getVersion();
     }
 
@@ -1474,8 +1470,6 @@ public class MainActivity extends AppCompatActivity {
                 InitReadySwitch(swReadyScore, player.getIsReady());
                 tvReadyPercentScore.setText(String.format(getString(R.string.ReadyPercent), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 swReadyScore.setBackgroundColor(player.getIsReady() ? colGreen : colRed);
-                CastTimeValue(getString(R.string.TimeZero));
-                CastTimeColor(Color.RED);
                 tvTimerResult.setText(getString(R.string.TimeZero));
                 tvTimerResult.setTextColor(Color.RED);
                 tvResultWho.setVisibility(View.VISIBLE);
