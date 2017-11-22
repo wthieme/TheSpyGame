@@ -1438,7 +1438,7 @@ public class MainActivity extends AppCompatActivity {
                 rlMain.setVisibility(View.GONE);
                 rlScore.setVisibility(View.VISIBLE);
                 tvTimer.setText(getString(R.string.TimeZero));
-                tvTimer.setTextColor(Color.RED);
+                tvTimer.setTextColor(ContextCompat.getColor(this, R.color.colorRood));
                 llReadyScore.setVisibility(View.GONE);
                 tvResultWho.setVisibility(View.GONE);
                 tvResultWhere.setVisibility(View.GONE);
@@ -1463,15 +1463,15 @@ public class MainActivity extends AppCompatActivity {
                 rlMain.setVisibility(View.GONE);
                 rlScore.setVisibility(View.VISIBLE);
                 CastTimeValue(getString(R.string.TimeZero));
-                CastTimeColor(Color.RED);
+                CastTimeColor(ContextCompat.getColor(this, R.color.colorRood));
                 tvTimer.setText(getString(R.string.TimeZero));
-                tvTimer.setTextColor(Color.RED);
+                tvTimer.setTextColor(ContextCompat.getColor(this, R.color.colorRood));
                 llReadyScore.setVisibility(View.VISIBLE);
                 InitReadySwitch(swReadyScore, player.getIsReady());
                 tvReadyPercentScore.setText(String.format(getString(R.string.ReadyPercent), Integer.toString(aantalReady), Integer.toString(nrOfPlayers)));
                 swReadyScore.setBackgroundColor(player.getIsReady() ? colGreen : colRed);
                 tvTimerResult.setText(getString(R.string.TimeZero));
-                tvTimerResult.setTextColor(Color.RED);
+                tvTimerResult.setTextColor(ContextCompat.getColor(this, R.color.colorRood));
                 tvResultWho.setVisibility(View.VISIBLE);
                 tvResultWho.setText(String.format(getString(R.string.SpyResult), theSpy == null ? "Unknown" : theSpy.getName()));
                 tvResultWhere.setVisibility(View.VISIBLE);
