@@ -40,12 +40,12 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.9.9'
-    implementation 'com.android.support:appcompat-v7:27.0.1'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.android.support:design:27.0.1'
-    implementation 'com.android.support:mediarouter-v7:27.0.1'
-    implementation 'com.google.firebase:firebase-messaging:11.6.0'
-    implementation 'com.google.android.gms:play-services-cast-framework:11.6.0'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:mediarouter-v7:27.0.2'
+    implementation 'com.google.firebase:firebase-messaging:11.6.2'
+    implementation 'com.google.android.gms:play-services-cast-framework:11.6.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
     implementation 'com.google.api-client:google-api-client-android:+' exclude module: 'httpclient'
     endpointsServer project(path: ':tsg_backend', configuration: 'endpoints')
