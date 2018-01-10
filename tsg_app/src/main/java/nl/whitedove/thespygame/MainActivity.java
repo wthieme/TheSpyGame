@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -896,7 +895,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
             MainActivity activity = activityWeakReference.get();
-            if (activity == null) return;
+            if (activity == null || result == null || result.second == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
@@ -953,7 +952,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
             MainActivity activity = activityWeakReference.get();
-            if (activity == null) return;
+            if (activity == null || result == null || result.second == null) return;
             Game game = result.second;
             Helper.SetGame(game);
             activity.ToonGameInfo();
@@ -1000,7 +999,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
             MainActivity activity = activityWeakReference.get();
-            if (activity == null) return;
+            if (activity == null || result == null || result.second == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
@@ -1055,7 +1054,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
             MainActivity activity = activityWeakReference.get();
-            if (activity == null) return;
+            if (activity == null || result == null || result.second == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
@@ -1135,7 +1134,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
             MainActivity activity = activityWeakReference.get();
-            if (activity == null) return;
+            if (activity == null || result == null || result.second == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
@@ -1188,7 +1187,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Pair<Context, Game> result) {
             MainActivity activity = activityWeakReference.get();
-            if (activity == null) return;
+            if (activity == null || result == null || result.second == null) return;
             Game game = result.second;
             String err = game.getResult();
             if (!err.equalsIgnoreCase(Helper.OK)) {
