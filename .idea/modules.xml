@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TheSpyGame.iml" filepath="$PROJECT_DIR$/TheSpyGame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TheSpyGame.iml" filepath="$PROJECT_DIR$/.idea/TheSpyGame.iml" />
       <module fileurl="file://$PROJECT_DIR$/tsg_app/tsg_app.iml" filepath="$PROJECT_DIR$/tsg_app/tsg_app.iml" />
       <module fileurl="file://$PROJECT_DIR$/tsg_backend/tsg_backend.iml" filepath="$PROJECT_DIR$/tsg_backend/tsg_backend.iml" />
     </modules>
