@@ -42,7 +42,7 @@ class CustomListAdapterLocations extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.locations_list_layout, parent, false);
 
             holder = new ViewHolder();
-            holder.tvPossibleLocation = (TextView) convertView.findViewById(R.id.tvPossibleLocation);
+            holder.tvPossibleLocation = convertView.findViewById(R.id.tvPossibleLocation);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

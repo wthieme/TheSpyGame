@@ -47,9 +47,9 @@ class CustomListAdapterMessages extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.messages_list_layout, parent, false);
 
             holder = new ViewHolder();
-            holder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-            holder.tvMessageDt = (TextView) convertView.findViewById(R.id.tvMessageDt);
-            holder.tvMessageText = (TextView) convertView.findViewById(R.id.tvMessageText);
+            holder.tvTitle = convertView.findViewById(R.id.tvTitle);
+            holder.tvMessageDt = convertView.findViewById(R.id.tvMessageDt);
+            holder.tvMessageText = convertView.findViewById(R.id.tvMessageText);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
